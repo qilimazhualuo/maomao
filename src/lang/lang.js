@@ -11,7 +11,8 @@ const lang = {
     gold: { zhcn: '金币', en: 'Gold' },
     // 建筑
     room: { zhcn: '房间', en: 'Room' },
-    farm: { zhcn: '农场', en: 'Farm' },
+    cropland: { zhcn: '农场', en: 'Farm' },
+    forest: { zhcn: '树林', en: 'Forest' },
     mine: { zhcn: '矿洞', en: 'Mine' },
     house: { zhcn: '房屋', en: 'House' },
     // 菜单
@@ -19,7 +20,7 @@ const lang = {
     priority: { zhcn: '优先级', en: 'Priority' },
     tech: { zhcn: '科技', en: 'Technology' },
     // 提示
-    tipOfBuild: { zhcn: '点击以建造', en: 'Click the building to build' },
+    tipOfBuild: { zhcn: '建造', en: 'Build' },
   },
 }
 

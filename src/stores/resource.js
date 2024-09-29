@@ -7,27 +7,28 @@ let inter
 export const useResourceStore = defineStore('resource', () => {
   // food ,木材-wood,石头-stone,金币-gold
   const resourceState = reactive({
-    foods: 0,
-    woods: 0,
-    stones: 0,
-    golds: 0
+    food: 0,
+    wood: 0,
+    stone: 0,
+    gold: 0
   })
   // 建筑
   const structures = reactive({
-    rooms: [],
-    croplands: [],
-    forests: [],
-    mines: [],
-    sawmills: [],
-    alchemys: [],
-    markets: [],
-    warehouses: []
+    room: [],
+    cropland: [],
+    forest: [],
+    mine: [],
+    sawmill: [],
+    alchemy: [],
+    market: [],
   })
+  // 仓库额外存储
+  const warehouses = ref([])
   // 仓库容量 - 先不搞仓库 - 一直增加吧
   const warehouseStore = computed(() => {
     // 基础容量
     const warehouse = config.warehouse
-    return structures.warehouses.reduce((prev, item) => {
+    return warehouses.value.reduce((prev, item) => {
       if (item.storeType === 'all') {
         prev.food += warehouse.store / 10
         prev.wood += warehouse.store / 10
@@ -37,7 +38,7 @@ export const useResourceStore = defineStore('resource', () => {
         prev[item.storeType] += warehouse.store
       }
       return prev
-    }, { food: 200, wood: 200, stone: 200, gold: 200 }) // 基础容量
+    }, { food: 1000, wood: 1000, stone: 200, gold: 200 }) // 基础容量
   })
 
   if (inter) {
@@ -46,68 +47,77 @@ export const useResourceStore = defineStore('resource', () => {
   inter = setInterval(() => {
     // 每个tokens处理产出和消耗
     // 食物固定增加
-    resourceState.foods += 1
-    if (resourceState.foods > warehouseStore.value.food) {
-      resourceState.foods = warehouseStore.value.food
+    resourceState.food += 1
+    Object.keys(structures).forEach((key) => {
+      // 建筑周期花费
+      const consume = config[key].consume
+      Object.keys(consume).forEach((resource) => {
+        resourceState[resource] -= consume[resource]
+      })
+      // 建筑周期产出
+      const productType = config[key].productType
+    })
+    if (resourceState.food > warehouseStore.value.food) {
+      resourceState.food = warehouseStore.value.food
     }
-    if (resourceState.stones > warehouseStore.value.stone) {
-      resourceState.stones = warehouseStore.value.stone
+    if (resourceState.stone > warehouseStore.value.stone) {
+      resourceState.stone = warehouseStore.value.stone
     }
-    if (resourceState.woods > warehouseStore.value.wood) {
-      resourceState.woods = warehouseStore.value.wood
+    if (resourceState.wood > warehouseStore.value.wood) {
+      resourceState.wood = warehouseStore.value.wood
     }
-    if (resourceState.golds > warehouseStore.value.gold) {
-      resourceState.golds = warehouseStore.value.gold
+    if (resourceState.gold > warehouseStore.value.gold) {
+      resourceState.gold = warehouseStore.value.gold
     }
   }, 1000)
 
   const product = (type) => {
     switch (type) {
       case 'room':
-        rooms.value.push({ id: new Date().getTime() })
+        structures.room.push({ id: new Date().getTime() })
         Object.keys(config.room.value).forEach((key) => {
-          resourceState[`${key}s`] -= config.room.value[key]
+          resourceState[key] -= config.room.value[key]
         })
         break
       case 'cropland':
-        croplands.value.push({ id: new Date().getTime() })
+        structures.cropland.push({ id: new Date().getTime() })
         Object.keys(config.cropland.value).forEach((key) => {
-          resourceState[`${key}s`] -= config.cropland.value[key]
+          resourceState[key] -= config.cropland.value[key]
         })
         break
       case 'forest':
-        forests.value.push({ id: new Date().getTime() })
+        structures.forest.push({ id: new Date().getTime() })
         Object.keys(config.forest.value).forEach((key) => {
-          resourceState[`${key}s`] -= config.forest.value[key]
+          resourceState[key] -= config.forest.value[key]
         })
         break
       case 'mine':
-        mines.value.push({ id: new Date().getTime() })
+        structures.mine.push({ id: new Date().getTime() })
         Object.keys(config.mine.value).forEach((key) => {
-          resourceState[`${key}s`] -= config.mine.value[key]
+          resourceState[key] -= config.mine.value[key]
         })
         break
       case 'sawmill':
-        sawmills.value.push({ id: new Date().getTime() })
+        structures.sawmill.push({ id: new Date().getTime() })
         Object.keys(config.sawmill.value).forEach((key) => {
-          resourceState[`${key}s`] -= config.sawmill.value[key]
+          resourceState[key] -= config.sawmill.value[key]
         })
         break
     }
   }
-  const { foods, woods, stones, golds, } = toRefs(resourceState)
-  const { rooms, croplands, forests, mines, sawmills, alchemys, markets, warehouses } = toRefs(structures)
+  const { food, wood, stone, gold } = toRefs(resourceState)
+  const { room, cropland, forest, mine, sawmill, alchemy, market } = toRefs(structures)
   return {
-    foods, woods, stones, golds,
-    rooms, croplands, forests, mines, sawmills, alchemys, markets, warehouses,
+    food, wood, stone, gold,
+    room, cropland, forest, mine, sawmill, alchemy, market, warehouses,
     warehouseStore, product
   }
 }, {
   persist: {
     storage: localStorage,
     pick: [
-      'foods', 'woods', 'stones', 'golds', 'rooms', 'croplands', 'forests',
-      'mines', 'sawmills', 'alchemys', 'markets', 'warehouses', 'warehouseStore'
+      'food', 'wood', 'stone', 'gold', 'room', 'cropland', 'forest',
+      'mine', 'sawmill', 'alchemy', 'market', 'warehouse', 'warehouseStore'
     ],
   },
 })

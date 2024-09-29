@@ -37,25 +37,25 @@ const happyColor = computed(() => {
         <a-menu-item>
           <span class="label">{{ $t('mao.food') }}</span>
           <a-tag>{{
-            `${resource.foods} / ${resource.warehouseStore.food}`
+            `${resource.food} / ${resource.warehouseStore.food}`
           }}</a-tag>
         </a-menu-item>
         <a-menu-item>
           <span class="label">{{ $t('mao.wood') }}</span>
           <a-tag>{{
-            `${resource.woods} / ${resource.warehouseStore.wood}`
+            `${resource.wood} / ${resource.warehouseStore.wood}`
           }}</a-tag>
         </a-menu-item>
         <a-menu-item>
           <span class="label">{{ $t('mao.stone') }}</span>
           <a-tag>{{
-            `${resource.stones} ${resource.warehouseStore.stone}`
+            `${resource.stone} ${resource.warehouseStore.stone}`
           }}</a-tag>
         </a-menu-item>
         <a-menu-item>
           <span class="label">{{ $t('mao.gold') }}</span>
           <a-tag>{{
-            `${resource.golds} / ${resource.warehouseStore.gold}`
+            `${resource.gold} / ${resource.warehouseStore.gold}`
           }}</a-tag>
         </a-menu-item>
       </a-menu>

@@ -3,58 +3,51 @@ export const config = {
   // 建筑类型 - production 生产单位,consume 消费单位, efficiency 影响效率的建筑
   room: {
     zhcn: '房屋',
-    buildType: 'consume', // 生产单位
-    value: { food: 10 }, // 建筑单位建筑花费
+    value: { food: 200 }, // 建筑单位建筑花费
     buildTime: 10, // 建筑单位建筑时间
-    resourceType: [], // 每周期花费
+    resourceType: {}, // 每周期生产
+    consume: {}
   },
   warehouse: {
     zhcn: '仓库',
-    buildType: 'store', // 储存单位
-    value: { food: 10, wood: 10, stone: 10 }, // 建筑单位建筑花费
+    value: { food: 200, wood: 200, stone: 200 }, // 建筑单位建筑花费
     buildTime: 10, // 建筑单位建筑时间
     store: 200, // 储存单位最大储存量
     storeType: 'all',
   },
   cropland: {
     zhcn: '农田',
-    buildType: 'production',
-    value: { food: 10, wood: 10 },
+    value: { food: 200 },
     buildTime: 10,
-    resourceType: { food: 10 },
+    resourceType: { food: 1 },
   },
   forest: {
     zhcn: '树林',
-    buildType: 'production',
-    value: { food: 10, wood: 10 },
+    value: { food: 200 },
     buildTime: 10,
-    resourceType: { wood: 10 },
+    resourceType: { wood: 1 },
   },
   mine: {
     zhcn: '矿洞',
-    buildType: 'production',
-    value: { food: 10, wood: 10 },
+    value: { food: 200, wood: 200 },
     buildTime: 10,
-    resourceType: { stone: 10 },
+    resourceType: { stone: 1 },
   },
   sawmill: {
     zhcn: '伐木场',
-    buildType: 'production',
-    value: { food: 10, wood: 10 },
+    value: { food: 1000, wood: 1000 },
     buildTime: 10,
-    resourceType: { wood: 10 },
+    resourceType: { wood: 2 },
   },
   alchemy: {
     zhcn: '炼金厂',
-    buildType: 'production',
-    value: { food: 10, wood: 10, stone: 10 },
-    resourceType: { gold: 10 },
+    value: { food: 1000, wood: 1000, stone: 1000 },
+    resourceType: { gold: 1 },
   },
   market: {
     zhcn: '市场',
-    buildType: 'consume',
-    value: { food: 10, wood: 10, stone: 10, gold: 10 },
+    value: { food: 1000, wood: 1000, stone: 1000, gold: 1000 },
     buildTime: 10,
-    resourceType: { gold: 10 },
+    resourceType: { gold: 1 },
   },
 }
