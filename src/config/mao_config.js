@@ -5,7 +5,7 @@ export const config = {
     zhcn: '房屋',
     value: { food: 200 }, // 建筑单位建筑花费
     buildTime: 10, // 建筑单位建筑时间
-    resourceType: {}, // 每周期生产
+    product: {}, // 每周期生产
     consume: {}
   },
   warehouse: {
@@ -19,35 +19,35 @@ export const config = {
     zhcn: '农田',
     value: { food: 200 },
     buildTime: 10,
-    resourceType: { food: 1 },
+    product: { food: 1 },
   },
   forest: {
     zhcn: '树林',
     value: { food: 200 },
     buildTime: 10,
-    resourceType: { wood: 1 },
+    product: { wood: 1 },
   },
   mine: {
     zhcn: '矿洞',
     value: { food: 200, wood: 200 },
     buildTime: 10,
-    resourceType: { stone: 1 },
+    product: { stone: 1 },
   },
   sawmill: {
     zhcn: '伐木场',
     value: { food: 1000, wood: 1000 },
     buildTime: 10,
-    resourceType: { wood: 2 },
+    product: { wood: 2 },
   },
   alchemy: {
     zhcn: '炼金厂',
     value: { food: 1000, wood: 1000, stone: 1000 },
-    resourceType: { gold: 1 },
+    product: { gold: 1 },
   },
   market: {
     zhcn: '市场',
     value: { food: 1000, wood: 1000, stone: 1000, gold: 1000 },
     buildTime: 10,
-    resourceType: { gold: 1 },
+    product: { gold: 1 },
   },
 }

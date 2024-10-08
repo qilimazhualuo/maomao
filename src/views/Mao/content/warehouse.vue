@@ -9,17 +9,25 @@ const { proxy } = getCurrentInstance()
 const resource = useResourceStore()
 
 const canBuild = computed(() => {
-  const { value } = config.cropland
+  const { value } = config.warehouse
   return Object.keys(value).every((key) => {
     return resource[key] >= value[key]
   })
 })
 const add = () => {
-  resource.product('cropland')
+  resource.product('warehouse')
 }
 
+const options = [
+  { label: '全部', value: 'all' },
+  { label: '食物', value: 'food' },
+  { label: '木材', value: 'wood' },
+  { label: '石头', value: 'stone' },
+  { label: '金币', value: 'gold' },
+]
+
 const tooltip = computed(() => {
-  const buildResource = config.cropland.value
+  const buildResource = config.warehouse.value
   return Object.keys(buildResource)
     .map((resource) => {
       return `${proxy.$t('mao.' + resource)} : ${buildResource[resource]}`
@@ -31,7 +39,7 @@ const tooltip = computed(() => {
 <template>
   <a-col :span="24">
     <a-typography-title :level="3">
-      <span>{{ $t('mao.cropland') }}</span>
+      <span>{{ $t('mao.warehouse') }}</span>
       <a-tooltip :title="tooltip">
         <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
           <template #icon><PlusSquareOutlined /></template>
@@ -40,8 +48,8 @@ const tooltip = computed(() => {
       </a-tooltip>
     </a-typography-title>
   </a-col>
-  <a-col v-for="(item, idx) in resource.cropland" :key="item.id">
-    <a-button>{{ `${$t('mao.cropland')}${idx}` }}</a-button>
+  <a-col v-for="(item, idx) in resource.warehouses" :key="item.id">
+    <a-segmented v-model:value="item.storeType" :options="options" />
   </a-col>
 </template>
 

@@ -18,6 +18,11 @@ const router = createRouter({
       path: '/mao',
       name: 'mao',
       component: () => import('@/views/Mao/index.vue')
+    },
+    {
+      path: '/coors',
+      name: 'coors',
+      component: () => import('@/views/coors.vue')
     }
   ]
 })

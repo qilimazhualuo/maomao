@@ -1,13 +1,15 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import { PlusSquareOutlined } from '@ant-design/icons-vue'
 import { useResourceStore } from '@/stores/resource'
 import { config } from '@/config/mao_config'
 
+const { proxy } = getCurrentInstance()
+
 const resource = useResourceStore()
 
 const canBuild = computed(() => {
-  const { value } = config.cropland
+  const { value } = config.forest
   return Object.keys(value).every((key) => {
     return resource[key] >= value[key]
   })
@@ -15,16 +17,27 @@ const canBuild = computed(() => {
 const add = () => {
   resource.product('forest')
 }
+
+const tooltip = computed(() => {
+  const buildResource = config.forest.value
+  return Object.keys(buildResource)
+    .map((resource) => {
+      return `${proxy.$t('mao.' + resource)} : ${buildResource[resource]}`
+    })
+    .join(' ')
+})
 </script>
 
 <template>
   <a-col :span="24">
     <a-typography-title :level="3">
       <span>{{ $t('mao.forest') }}</span>
-      <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
-        <template #icon><PlusSquareOutlined /></template>
-        {{ $t('mao.tipOfBuild') }}
-      </a-button>
+      <a-tooltip :title="tooltip">
+        <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
+          <template #icon><PlusSquareOutlined /></template>
+          {{ $t('mao.tipOfBuild') }}
+        </a-button>
+      </a-tooltip>
     </a-typography-title>
   </a-col>
   <a-col v-for="(item, idx) in resource.forest" :key="item.id">

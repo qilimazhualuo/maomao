@@ -49,7 +49,7 @@ const happyColor = computed(() => {
         <a-menu-item>
           <span class="label">{{ $t('mao.stone') }}</span>
           <a-tag>{{
-            `${resource.stone} ${resource.warehouseStore.stone}`
+            `${resource.stone} / ${resource.warehouseStore.stone}`
           }}</a-tag>
         </a-menu-item>
         <a-menu-item>

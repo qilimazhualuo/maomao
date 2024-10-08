@@ -15,6 +15,9 @@ const lang = {
     forest: { zhcn: '树林', en: 'Forest' },
     mine: { zhcn: '矿洞', en: 'Mine' },
     house: { zhcn: '房屋', en: 'House' },
+    sawmill: { zhcn: '伐木厂', en: 'Sawmill' },
+    alchemy: { zhcn: '炼金厂', en: 'Alchemy' },
+    warehouse: { zhcn: '仓库', en: 'Warehouse' },
     // 菜单
     automation: { zhcn: '自动化', en: 'Automation' },
     priority: { zhcn: '优先级', en: 'Priority' },
