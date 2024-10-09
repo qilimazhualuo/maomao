@@ -5,10 +5,12 @@ const lang = {
   mao: {
     // 存储
     happy: { zhcn: '幸福度', en: 'Happiness' },
+    all: { zhcn: '全部', en: 'All' },
     food: { zhcn: '食物', en: 'Food' },
     wood: { zhcn: '木材', en: 'Wood' },
     stone: { zhcn: '石头', en: 'Stone' },
     gold: { zhcn: '金币', en: 'Gold' },
+    people: { zhcn: '人口', en: 'People' },
     // 建筑
     room: { zhcn: '房间', en: 'Room' },
     cropland: { zhcn: '农场', en: 'Farm' },

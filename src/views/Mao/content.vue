@@ -33,6 +33,9 @@ const className = computed(() => `header ${props.class}`)
       </a-col>
       <a-col :span="8">
         <a-row :gutter="[8, 8]">
+          <!-- 人口 -->
+          
+          <!-- 仓库 -->
           <warehouse />
         </a-row>
       </a-col>

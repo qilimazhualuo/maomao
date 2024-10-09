@@ -24,6 +24,8 @@ export const useResourceStore = defineStore(
       alchemy: [],
       market: [],
     })
+    // 科技
+    const tech = ref([])
     // 仓库额外存储
     const warehouses = ref([])
     // 仓库容量
@@ -113,6 +115,11 @@ export const useResourceStore = defineStore(
             resourceState[key] -= config.sawmill.value[key]
           })
           break
+        case 'alchemy':
+          structures.alchemy.push({ id: new Date().getTime() })
+          Object.keys(config.alchemy.value).forEach((key) => {
+            resourceState[key] -= config.alchemy.value[key]
+          })
         case 'warehouse':
           warehouses.value.push({ id: new Date().getTime(), storeType: 'all' })
           Object.keys(config.warehouse.value).forEach((key) => {
@@ -127,6 +134,7 @@ export const useResourceStore = defineStore(
       wood,
       stone,
       gold,
+      tech,
       room,
       cropland,
       forest,
@@ -147,6 +155,7 @@ export const useResourceStore = defineStore(
         'wood',
         'stone',
         'gold',
+        'tech',
         'room',
         'cropland',
         'forest',

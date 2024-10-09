@@ -19,11 +19,11 @@ const add = () => {
 }
 
 const options = [
-  { label: '全部', value: 'all' },
-  { label: '食物', value: 'food' },
-  { label: '木材', value: 'wood' },
-  { label: '石头', value: 'stone' },
-  { label: '金币', value: 'gold' },
+  { label: proxy.$t('mao.all'), value: 'all' },
+  { label: proxy.$t('mao.food'), value: 'food' },
+  { label: proxy.$t('mao.wood'), value: 'wood' },
+  { label: proxy.$t('mao.stone'), value: 'stone' },
+  { label: proxy.$t('mao.gold'), value: 'gold' },
 ]
 
 const tooltip = computed(() => {

@@ -1,4 +1,5 @@
 <script setup>
+import tech from './header/tech.vue'
 import { computed, ref } from 'vue'
 
 import { useResourceStore } from '@/stores/resource'
@@ -63,7 +64,7 @@ const happyColor = computed(() => {
     <a-space class="opearte">
       <a-button size="small" type="dashed">{{ $t('mao.automation') }}</a-button>
       <a-button size="small" type="dashed">{{ $t('mao.priority') }}</a-button>
-      <a-button size="small" type="dashed">{{ $t('mao.tech') }}</a-button>
+      <tech />
       <a-button size="small" type="dashed">{{ $t('com.save') }}</a-button>
     </a-space>
   </div>

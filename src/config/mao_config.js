@@ -6,7 +6,8 @@ export const config = {
     value: { food: 200 }, // 建筑单位建筑花费
     buildTime: 10, // 建筑单位建筑时间
     product: {}, // 每周期生产
-    consume: {}
+    consume: {},
+    people: 1, // 容纳人口数量
   },
   warehouse: {
     zhcn: '仓库',
@@ -51,3 +52,40 @@ export const config = {
     product: { gold: 1 },
   },
 }
+
+export const tech = [
+  {
+    name: '种田',
+    desc: '可以生产农田',
+    value: 1000, // 单位一人时工作量
+    effect: {},
+    children: [
+      {
+        name: '农田',
+        desc: '可以生产粮食',
+        value: 1000, // 单位一人时工作量
+        effect: {},
+      },
+      {
+        name: '农田',
+        desc: '可以生产粮食',
+        value: 1000, // 单位一人时工作量
+        effect: {},
+      },
+    ],
+  },
+  {
+    name: '采矿',
+    desc: '可以开挖矿洞',
+    value: 1000, // 单位一人时工作量
+    effect: {},
+    children: [
+      {
+        name: '农田',
+        desc: '可以生产粮食',
+        value: 1000, // 单位一人时工作量
+        effect: {},
+      },
+    ],
+  },
+]
