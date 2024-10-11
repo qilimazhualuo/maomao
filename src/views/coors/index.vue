@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
+import Map from './map.vue'
 
 const pre = ref('')
 const next = ref([])
@@ -51,11 +52,15 @@ const copy = () => {
         <a-button type="primary" @click.stop="copy">复制</a-button>
       </a-space>
     </a-space>
-    <a-tabs class="coors-content px-2" v-model:activeKey="activeKey">
+    <a-tabs class="coors-content px-2">
       <a-tab-pane key="1" tab="列表展示">
-        <a-tag v-for="(item, idx) in next" :key="item" closable @close="close(idx)">{{ item }}</a-tag>
+        <div class="w-100 h-100 p-2 border radius">
+          <a-tag v-for="(item, idx) in next" :key="item" closable @close="close(idx)">{{ item }}</a-tag>
+        </div>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="地图展示">Content of Tab Pane 2</a-tab-pane>
+      <a-tab-pane key="2" tab="地图展示">
+        <Map v-model:value="next" />
+      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
@@ -68,6 +73,13 @@ const copy = () => {
   .coors-content {
     height: 2px;
     flex: 1 1 auto;
+    .ant-tabs-content {
+      height: 100%;
+      padding-bottom: 8px;
+      .ant-tabs-tabpane {
+        height: 100%;
+      }
+    }
   }
 }
 </style>
