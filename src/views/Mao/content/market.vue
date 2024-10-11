@@ -9,25 +9,17 @@ const { proxy } = getCurrentInstance()
 const resource = useResourceStore()
 
 const canBuild = computed(() => {
-  const { value } = config.warehouse
+  const { value } = config.market
   return Object.keys(value).every((key) => {
     return resource[key] >= value[key]
   })
 })
 const add = () => {
-  resource.product('warehouse')
+  resource.product('market')
 }
 
-const options = [
-  { label: proxy.$t('mao.all'), value: 'all' },
-  { label: proxy.$t('mao.food'), value: 'food' },
-  { label: proxy.$t('mao.wood'), value: 'wood' },
-  { label: proxy.$t('mao.stone'), value: 'stone' },
-  { label: proxy.$t('mao.gold'), value: 'gold' },
-]
-
 const tooltip = computed(() => {
-  const buildResource = config.warehouse.value
+  const buildResource = config.market.value
   return Object.keys(buildResource)
     .map((resource) => {
       return `${proxy.$t('mao.' + resource)} : ${buildResource[resource]}`
@@ -39,7 +31,7 @@ const tooltip = computed(() => {
 <template>
   <a-col :span="24">
     <a-typography-title :level="3">
-      <span>{{ $t('mao.warehouse') }}</span>
+      <span>{{ $t('mao.market') }}</span>
       <a-tooltip :title="tooltip">
         <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
           <template #icon><PlusSquareOutlined /></template>
@@ -48,8 +40,8 @@ const tooltip = computed(() => {
       </a-tooltip>
     </a-typography-title>
   </a-col>
-  <a-col v-for="(item, idx) in resource.warehouses" :key="item.id">
-    <a-segmented v-model:value="item.storeType" :options="options"/>
+  <a-col v-for="(item, idx) in resource.market" :key="item.id">
+    <a-button>{{ `${$t('mao.market')}${idx}` }}</a-button>
   </a-col>
 </template>
 

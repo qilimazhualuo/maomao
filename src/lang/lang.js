@@ -19,6 +19,7 @@ const lang = {
     house: { zhcn: '房屋', en: 'House' },
     sawmill: { zhcn: '伐木厂', en: 'Sawmill' },
     alchemy: { zhcn: '炼金厂', en: 'Alchemy' },
+    market: { zhcn: '市场', en: 'Market' },
     warehouse: { zhcn: '仓库', en: 'Warehouse' },
     // 菜单
     automation: { zhcn: '自动化', en: 'Automation' },

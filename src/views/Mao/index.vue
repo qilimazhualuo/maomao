@@ -19,7 +19,7 @@ import Content from './content.vue'
     height: 2px;
     flex: 1 1 auto;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 24px 36px -28px inset;
-    overflow: auto;
+    overflow: hidden;
   }
 }
 </style>

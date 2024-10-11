@@ -7,6 +7,7 @@ import mine from './content/mine.vue'
 import sawmill from './content/sawmill.vue'
 import alchemy from './content/alchemy.vue'
 import warehouse from './content/warehouse.vue'
+import market from './content/market.vue'
 
 const props = defineProps({
   class: {
@@ -15,13 +16,13 @@ const props = defineProps({
   },
 })
 
-const className = computed(() => `header ${props.class}`)
+const className = computed(() => `content ${props.class}`)
 </script>
 
 <template>
   <div :class="className">
     <a-row :gutter="[8, 8]">
-      <a-col :span="16">
+      <a-col :span="16" class="left">
         <a-row :gutter="[8, 8]">
           <room />
           <cropland />
@@ -29,9 +30,10 @@ const className = computed(() => `header ${props.class}`)
           <sawmill />
           <mine />
           <alchemy />
+          <market />
         </a-row>
       </a-col>
-      <a-col :span="8">
+      <a-col :span="8" class="right">
         <a-row :gutter="[8, 8]">
           <!-- 人口 -->
           
@@ -44,7 +46,15 @@ const className = computed(() => `header ${props.class}`)
 </template>
 
 <style lang="less" scoped>
-.header {
+.content {
   padding: 0 calc(0.2rem + 8px);
+  .ant-row {
+    height: 100%;
+  }
+  .left, .right {
+    height: 100%;
+    overflow: auto;
+  }
 }
+
 </style>

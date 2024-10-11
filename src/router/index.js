@@ -22,7 +22,7 @@ const router = createRouter({
     {
       path: '/coors',
       name: 'coors',
-      component: () => import('@/views/coors.vue')
+      component: () => import('@/views/coors/index.vue')
     }
   ]
 })

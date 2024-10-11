@@ -89,3 +89,15 @@ export const tech = [
     ],
   },
 ]
+
+export const names = {
+  zhcn: [
+    '陈滨', '孙冕', '詹泉', '乔岭', '屈然', '冯炼', '洪龙', '高娇', '柳蕙', '龙容',
+    '杜芊', '褚军', '祖凌', '瞿令', '邹贝', '怀洲', '戚兰', '柳卉', '经姿', '夏影',
+  ],
+  en: [
+    'Jeffrey', 'Katrina', 'Roxanne', 'Farley', 'Heathcliff', 'Davida',
+    'Ralph', 'Halsey', 'Oriel', 'Kendall', 'Victor', 'Questa', 'Angelic',
+    'Ward', 'Derwin', 'Fiona', 'Famous', 'Hattie', 'Sharon', 'Cub',
+  ],
+}
