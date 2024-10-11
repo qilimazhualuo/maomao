@@ -19,11 +19,16 @@ yarn
 ### Compile and Hot-Reload for Development
 
 ```sh
-yarn dev
+yarn tauri dev
 ```
 
 ### Compile and Minify for Production
 
 ```sh
-yarn build
+yarn tauri build
+```
+
+### 下载项目 使用--recurse-submodules 一并下载子项目
+```sh
+git clone --recurse-submodules
 ```
