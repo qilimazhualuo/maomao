@@ -35,6 +35,28 @@ const copy = () => {
   navigator.clipboard.writeText(JSON.stringify(next.value))
   message.success('已复制到剪切板！')
 }
+
+const close = (idx) => {
+  next.value.splice(idx, 1)
+  next.value = [...next.value]
+}
+
+const dragIdx = ref()
+
+const drag = (idx) => {
+  console.log(idx)
+  dragIdx.value = idx
+}
+
+const dragend = (item, idx) => {
+  console.log(item, idx)
+  dragIdx.value = undefined
+}
+
+const dragover = (idx) => {
+  console.log(idx)
+}
+
 </script>
 
 <template>
@@ -52,16 +74,24 @@ const copy = () => {
         <a-button type="primary" @click.stop="copy">复制</a-button>
       </a-space>
     </a-space>
-    <a-tabs class="coors-content px-2">
-      <a-tab-pane key="1" tab="列表展示">
-        <div class="w-100 h-100 p-2 border radius">
-          <a-tag v-for="(item, idx) in next" :key="item" closable @close="close(idx)">{{ item }}</a-tag>
+    <div class="coors-content p-2 w-100">
+      <div class="w-1-3 h-100 p-2 border radius overflow-x" >
+        <div
+          v-for="(item, idx) in next"
+          :key="item"
+          @dragstart="drag(idx)"
+          @drop="(e) => {
+            e.preventDefault()
+            dragover(idx)
+          }"
+          :draggable="true"
+          :class="{ drag: dragIdx === idx }"
+        >{{ idx }}
+          <a-tag closable @close="close(idx)">{{ item }}</a-tag>
         </div>
-      </a-tab-pane>
-      <a-tab-pane key="2" tab="地图展示">
-        <Map v-model:value="next" />
-      </a-tab-pane>
-    </a-tabs>
+      </div>
+      <Map v-model:value="next" />
+    </div>
   </div>
 </template>
 
@@ -73,13 +103,18 @@ const copy = () => {
   .coors-content {
     height: 2px;
     flex: 1 1 auto;
-    .ant-tabs-content {
-      height: 100%;
-      padding-bottom: 8px;
-      .ant-tabs-tabpane {
-        height: 100%;
-      }
+    display: flex;
+    .drag {
+      opacity: 0.5;
     }
+
+    // .ant-tabs-content {
+    //   height: 100%;
+    //   padding-bottom: 8px;
+    //   .ant-tabs-tabpane {
+    //     height: 100%;
+    //   }
+    // }
   }
 }
 </style>
