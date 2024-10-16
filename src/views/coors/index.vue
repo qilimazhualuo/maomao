@@ -41,22 +41,6 @@ const close = (idx) => {
   next.value = [...next.value]
 }
 
-const dragIdx = ref()
-
-const drag = (idx) => {
-  console.log(idx)
-  dragIdx.value = idx
-}
-
-const dragend = (item, idx) => {
-  console.log(item, idx)
-  dragIdx.value = undefined
-}
-
-const dragover = (idx) => {
-  console.log(idx)
-}
-
 </script>
 
 <template>
@@ -79,14 +63,8 @@ const dragover = (idx) => {
         <div
           v-for="(item, idx) in next"
           :key="item"
-          @dragstart="drag(idx)"
-          @drop="(e) => {
-            e.preventDefault()
-            dragover(idx)
-          }"
-          :draggable="true"
           :class="{ drag: dragIdx === idx }"
-        >{{ idx }}
+        >
           <a-tag closable @close="close(idx)">{{ item }}</a-tag>
         </div>
       </div>
