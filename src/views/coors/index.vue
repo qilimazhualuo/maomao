@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons-vue'
 import Map from './map.vue'
 
 const pre = ref('')
@@ -41,6 +42,25 @@ const close = (idx) => {
   next.value = [...next.value]
 }
 
+const move = (idx, up) => {
+  if (up) {
+    if (idx === 0) {
+      return
+    }
+    const temp = next.value[idx]
+    next.value[idx] = next.value[idx - 1]
+    next.value[idx - 1] = temp
+  } else {
+    if (idx === next.value.length - 1) {
+      return
+    }
+    const temp = next.value[idx]
+    next.value[idx] = next.value[idx + 1]
+    next.value[idx + 1] = temp
+  }
+  next.value = [...next.value]
+}
+
 </script>
 
 <template>
@@ -59,13 +79,25 @@ const close = (idx) => {
       </a-space>
     </a-space>
     <div class="coors-content p-2 w-100">
-      <div class="w-1-3 h-100 p-2 border radius overflow-x" >
-        <div
-          v-for="(item, idx) in next"
-          :key="item"
-          :class="{ drag: dragIdx === idx }"
-        >
-          <a-tag closable @close="close(idx)">{{ item }}</a-tag>
+      <div class="w-1-3 h-100 p-2 border radius overflow-x me-2" >
+        <div>
+          <a-tag
+            v-for="(item, idx) in next"
+            :key="item"
+            closable
+            @close="close(idx)"
+            class="w-100 mb-2 coors-content-item"
+          >
+            <span>{{ item.join(',') }}</span>
+            <div>
+              <a-button type="text" size="small" @click.stop="move(idx, true)">
+                <template #icon><ArrowUpOutlined /></template>
+              </a-button>
+              <a-button type="text" size="small" @click.stop="move(idx)">
+                <template #icon><ArrowDownOutlined/></template>
+              </a-button>
+            </div>
+          </a-tag>
         </div>
       </div>
       <Map v-model:value="next" />
@@ -82,17 +114,11 @@ const close = (idx) => {
     height: 2px;
     flex: 1 1 auto;
     display: flex;
-    .drag {
-      opacity: 0.5;
+    .coors-content-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-
-    // .ant-tabs-content {
-    //   height: 100%;
-    //   padding-bottom: 8px;
-    //   .ant-tabs-tabpane {
-    //     height: 100%;
-    //   }
-    // }
   }
 }
 </style>

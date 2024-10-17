@@ -19,12 +19,16 @@ onMounted(() => {
         zoom: 10
     })
     map.loadMap('gaode')
-    map.createLayer({ id: layerId })
+    // map.createLayer({ id: layerId })
 })
 
 watch(() => props.value, (val) => {
-    map.clearLayer(layerId)
-    map.createLine({ data: val, layerId, goView: true })
+    map.clearMeature()
+    map.setMeatureGeojson({
+        type: 'LineString',
+        coordinates: val
+    })
+    // map.createLine({ data: val, layerId, goView: true })
 })
 </script>
 
