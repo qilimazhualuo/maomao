@@ -88,7 +88,7 @@ const move = (idx, up) => {
             @close="close(idx)"
             class="w-100 mb-2 coors-content-item"
           >
-            <span>{{ item.join(',') }}</span>
+            <span>{{ item.map((i) => Number(i).toFixed(7)).join(',') }}</span>
             <div>
               <a-button type="text" size="small" @click.stop="move(idx, true)">
                 <template #icon><ArrowUpOutlined /></template>

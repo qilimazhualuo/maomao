@@ -8,7 +8,7 @@ const props = defineProps({
         default: () => ([])
     }
 })
-defineEmits(['update:value'])
+const emit = defineEmits(['update:value'])
 
 let map, layerId = 'coors-layer'
 
@@ -19,11 +19,18 @@ onMounted(() => {
         zoom: 10
     })
     map.loadMap('gaode')
-    // map.createLayer({ id: layerId })
+    map.setMeatureCallBack(({ features }) => {
+        emit('update:value', features[0].geometry.coordinates)
+    })
+    map.addEvent('click', ({ coordinate }) => {
+        emit('update:value', props.value.concat([coordinate]))
+    })
 })
 
-watch(() => props.value, (val) => {
+watch(() => props.value, (val, oldVal) => {
+    // if (JSON.stringify(val) === JSON.stringify(oldVal)) return
     map.clearMeature()
+    if (val.length === 0) return
     map.setMeatureGeojson({
         type: 'LineString',
         coordinates: val
