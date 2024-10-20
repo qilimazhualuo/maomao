@@ -32,3 +32,8 @@ yarn tauri build
 ```sh
 git clone --recurse-submodules
 ```
+
+添加submodule方法
+```sh
+git submodule add https://github.com/qilimazhualuo/3dmap.git src/common/map3
+```
