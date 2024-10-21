@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, getCurrentInstance } from 'vue'
 import Map from '@/common/map'
 
 const props = defineProps({
@@ -10,11 +10,13 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:value'])
 
-let map, layerId = 'coors-layer'
+const { proxy } = getCurrentInstance()
+
+let map
 
 onMounted(() => {
     map = new Map({
-        id: 'coors-map',
+        target: proxy.$refs.mapRef,
         center: [120, 30],
         zoom: 10
     })
@@ -28,19 +30,17 @@ onMounted(() => {
 })
 
 watch(() => props.value, (val, oldVal) => {
-    // if (JSON.stringify(val) === JSON.stringify(oldVal)) return
     map.clearMeature()
     if (val.length === 0) return
     map.setMeatureGeojson({
         type: 'LineString',
         coordinates: val
     })
-    // map.createLine({ data: val, layerId, goView: true })
 })
 </script>
 
 <template>
-    <div class="border radius w-2-3" id="coors-map">
+    <div class="border radius w-2-3" ref="mapRef">
     </div>
 </template>
 

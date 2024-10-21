@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { useResourceStore } from '@/stores/resource'
+import '@/stores/resource'
 </script>
 
 <template>
@@ -10,7 +10,7 @@ import { useResourceStore } from '@/stores/resource'
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/mao">猫猫</RouterLink>
         <RouterLink to="/coors">Coors</RouterLink>
-        <RouterLink to="/about">About(这里是私货)</RouterLink>
+        <RouterLink to="/about">一些展示</RouterLink>
       </nav>
     </div>
   </header>

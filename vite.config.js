@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import cesium from 'vite-plugin-cesium'
 
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
@@ -14,6 +15,7 @@ export default defineConfig({
     vue(),
     vueJsx(),
     vueDevTools(),
+    cesium(),
     Components({
       resolvers: [
         AntDesignVueResolver({
@@ -28,6 +30,12 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3000
+    port: 3000,
+    proxy: {
+      '/terrain': {
+          target: 'http://118.89.125.148:25300',
+          changeOrigin: true,
+      },
+    }
   }
 })
