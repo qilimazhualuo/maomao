@@ -9,11 +9,9 @@ defineProps({
 
 <template>
   <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
+    <h1 class="green">您好，我是张贝</h1>
     <h3>
-      You’ve successfully created a project with
-      <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> +
-      <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
+      我是一名前端开发工程师，擅长使用Vue、React等前端框架进行开发，熟悉WebGL、Three.js等图形学技术，具备良好的代码规范和团队协作能力。
     </h3>
   </div>
 </template>

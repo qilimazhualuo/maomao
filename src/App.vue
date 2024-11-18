@@ -10,7 +10,7 @@ import '@/stores/resource'
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/mao">猫猫</RouterLink>
         <RouterLink to="/coors">Coors</RouterLink>
-        <RouterLink to="/about">一些展示</RouterLink>
+        <RouterLink to="/about">关于我</RouterLink>
       </nav>
     </div>
   </header>

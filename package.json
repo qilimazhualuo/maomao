@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@turf/turf": "^7.1.0",
     "ant-design-vue": "4.x",
     "cesium": "^1.122.0",
     "cesium-navigation-es6": "^3.0.9",
@@ -26,10 +27,12 @@
     "@tauri-apps/cli": "^1.6.2",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vitejs/plugin-vue-jsx": "^4.0.0",
+    "eslint": "^9.15.0",
     "less": "^4.2.0",
     "unplugin-vue-components": "^0.27.4",
     "vite": "^5.4.9",
     "vite-plugin-cesium": "^1.2.23",
+    "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-vue-devtools": "^7.5.2"
   }
 }
