@@ -6,6 +6,11 @@ const props = defineProps({
     }
 })
 
+/**
+ * 绘制
+ * @param {string} key 绘制类型 [Point, fixedCircle, Circle, Rect, LineString, Polygon]
+ * @param {function} callback 回调
+ */
 const draw = ({ key }) => {
     if (key === 'clear') {
         props.map.clear()
@@ -13,6 +18,15 @@ const draw = ({ key }) => {
     }
     props.map.draw(key)
 }
+
+const setDrawCallback = (callback) => {
+    props.map.setMeatureCallBack(callback)
+}
+
+defineExpose({
+    draw,
+    setDrawCallback
+})
 </script>
 
 <template>

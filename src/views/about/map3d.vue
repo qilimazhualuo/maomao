@@ -17,20 +17,36 @@ onMounted(() => {
     map.loadMap('gaode')
     mapOk.value = true
 })
+
+const drawHole = ({ geojson }) => {
+    console.log(geojson)
+    proxy.$refs.measureRef && proxy.$refs.measureRef.setDrawCallback(undefined)
+}
+
+const startDrawHole = () => {
+    proxy.$refs.measureRef && proxy.$refs.measureRef.draw({ key: 'Polygon' })
+    proxy.$refs.measureRef && proxy.$refs.measureRef.setDrawCallback(drawHole)
+}
 </script>
 
 <template>
     <div class="menu p-2">
-        <a-typography-title :level="2">3dmap绘制功能</a-typography-title>
-        <a-typography-paragraph>
-            鼠标悬浮到地图右上角的 <a-typography-text strong>绘制</a-typography-text> 按钮，选择绘制功能，
-            即可在地图上绘制点、线、面、圆等图形，并支持编辑和删除。
-        </a-typography-paragraph>
-        <a-typography-title :level="2">自定义primitive</a-typography-title>
-        <radar v-if="mapOk" :map="map"/>
+        <a-collapse>
+            <a-collapse-panel header="绘制">
+                <a-typography-title :level="2">3dmap绘制功能</a-typography-title>
+                <a-typography-paragraph>
+                    鼠标悬浮到地图右上角的 <a-typography-text strong>绘制</a-typography-text> 按钮，选择绘制功能，
+                    即可在地图上绘制点、线、面、圆等图形，并支持编辑和删除。
+                </a-typography-paragraph>
+                <a-button @click="startDrawHole">点击绘制洞</a-button>
+            </a-collapse-panel>
+            <a-collapse-panel header="自定义primitive">
+                <radar v-if="mapOk" :map="map"/>
+            </a-collapse-panel>
+        </a-collapse>
     </div>
     <div class="map" ref="mapRef">
-        <Meature v-if="mapOk" :map="map" />
+        <Meature v-if="mapOk" :map="map" ref="measureRef"/>
     </div>
 </template>
 
