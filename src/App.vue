@@ -9,8 +9,9 @@ import '@/stores/resource'
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/mao">猫猫</RouterLink>
-        <RouterLink to="/coors">Coors</RouterLink>
-        <RouterLink to="/about">挖洞</RouterLink>
+        <RouterLink to="/coors">坐标</RouterLink>
+        <RouterLink to="/map3d">地图</RouterLink>
+        <RouterLink to="/doc">文档处理</RouterLink>
       </nav>
     </div>
   </header>

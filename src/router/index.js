@@ -20,9 +20,14 @@ const router = createRouter({
             component: () => import('@/views/coors/index.vue'),
         },
         {
-            path: '/about',
-            name: 'about',
-            component: () => import('../views/about/index.vue'),
+            path: '/map3d',
+            name: 'map3d',
+            component: () => import('../views/map3d/index.vue'),
+        },
+        {
+            path: '/doc',
+            name: 'doc',
+            component: () => import('../views/doc/index.vue'),
         },
     ],
 })

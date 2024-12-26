@@ -31,6 +31,7 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    host: '0.0.0.0',
     proxy: {
       '/terrain': {
           target: 'http://118.89.125.148:25300',

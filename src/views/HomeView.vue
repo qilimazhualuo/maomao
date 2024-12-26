@@ -1,10 +1,7 @@
-<script setup>
-import HelloWorld from '@/components/HelloWorld.vue'
-</script>
+<script setup></script>
 
 <template>
-  <main class="px-2">
-    <a-button type="primary">123</a-button>
-    <HelloWorld />
-  </main>
+    <main class="px-2">
+        <a-button type="primary">工具</a-button>
+    </main>
 </template>
