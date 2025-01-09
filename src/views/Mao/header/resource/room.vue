@@ -33,15 +33,19 @@ const tooltip = computed(() => {
     <a-typography-title :level="3">
       <span>{{ $t('mao.room') }}</span>
       <a-tooltip :title="tooltip">
-        <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
-          <template #icon><PlusSquareOutlined /></template>
+        <a-button class="ms-2 mr-2" :disabled="!canBuild" size="small" @click.stop="add">
+          <template #icon>
+            <PlusSquareOutlined />
+          </template>
           {{ $t('mao.tipOfBuild') }}
         </a-button>
       </a-tooltip>
     </a-typography-title>
   </a-col>
-  <a-col v-for="(item, idx) in resource.room" :key="item.id">
-    <a-button>{{ `${$t('mao.room')}${idx}` }}</a-button>
+  <a-col :span="24">
+    <a-space wrap>
+      <a-button v-for="(item, idx) in resource.room" :key="item.id">{{ `${$t('mao.room')}${idx}` }}</a-button>
+    </a-space>
   </a-col>
 </template>
 

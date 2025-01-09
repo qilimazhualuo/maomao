@@ -715,6 +715,6 @@ body {
   border-radius: var(--border-radius);
 }
 
-.overflow-x {
-  overflow-x: auto;
+.overflow {
+  overflow: auto;
 }

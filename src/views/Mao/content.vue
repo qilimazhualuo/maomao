@@ -1,13 +1,6 @@
 <script setup>
-import { computed } from 'vue'
-import room from './content/room.vue'
-import cropland from './content/cropland.vue'
-import forest from './content/forest.vue'
-import mine from './content/mine.vue'
-import sawmill from './content/sawmill.vue'
-import alchemy from './content/alchemy.vue'
-import warehouse from './content/warehouse.vue'
-import market from './content/market.vue'
+import { computed, getCurrentInstance, onMounted } from 'vue'
+import Scene from '@/common/three'
 
 const props = defineProps({
   class: {
@@ -16,41 +9,27 @@ const props = defineProps({
   },
 })
 
+const { proxy } = getCurrentInstance()
+
 const className = computed(() => `content ${props.class}`)
+
+let scene
+
+onMounted(() => {
+  scene = new Scene({ dom: proxy.$refs.scene })
+  scene.addBox({ width: 10, height: 10, depth: 10, color: "#fff0ff", position: { x: 0, y: 0, z: 5 } })
+  scene.addPlane({ width: 100, height: 100, color: "#fff0ff" })
+  scene.goView({ x: 10, y: 10, z: 10 }, 100)
+})
 </script>
 
 <template>
-  <div :class="className">
-    <a-row :gutter="[8, 8]">
-      <a-col :span="16" class="left">
-        <a-row :gutter="[8, 8]">
-          <room />
-          <cropland />
-          <forest />
-          <sawmill />
-          <mine />
-          <alchemy />
-          <market />
-        </a-row>
-      </a-col>
-      <a-col :span="8" class="right">
-        <a-row :gutter="[8, 8]">
-          <!-- 人口 -->
-          
-          <!-- 仓库 -->
-          <warehouse />
-        </a-row>
-      </a-col>
-    </a-row>
-  </div>
+  <div :class="className" ref="scene"></div>
 </template>
 
 <style lang="less" scoped>
 .content {
-  padding: 0 calc(0.2rem + 8px);
-  .ant-row {
-    height: 100%;
-  }
+  background-color: aliceblue;
   .left, .right {
     height: 100%;
     overflow: auto;

@@ -1,13 +1,15 @@
 <script setup>
 import Header from './header.vue'
 import Content from './content.vue'
+import Menu from '@/components/menu.vue'
 </script>
 
 <template>
   <div class="mao-container">
     <Header class="mao-header" />
-    <Content class="mao-content py-2" />
+    <Content class="mao-content" />
   </div>
+  <Menu />
 </template>
 
 <style lang="less" scoped>
@@ -20,6 +22,9 @@ import Content from './content.vue'
     flex: 1 1 auto;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 24px 36px -28px inset;
     overflow: hidden;
+    :deep(.ant-typography) {
+      margin-bottom: 4px;
+    }
   }
 }
 </style>

@@ -9,17 +9,17 @@ const { proxy } = getCurrentInstance()
 const resource = useResourceStore()
 
 const canBuild = computed(() => {
-  const { value } = config.cropland
+  const { value } = config.forest
   return Object.keys(value).every((key) => {
     return resource[key] >= value[key]
   })
 })
 const add = () => {
-  resource.product('cropland')
+  resource.product('forest')
 }
 
 const tooltip = computed(() => {
-  const buildResource = config.cropland.value
+  const buildResource = config.forest.value
   return Object.keys(buildResource)
     .map((resource) => {
       return `${proxy.$t('mao.' + resource)} : ${buildResource[resource]}`
@@ -31,17 +31,21 @@ const tooltip = computed(() => {
 <template>
   <a-col :span="24">
     <a-typography-title :level="3">
-      <span>{{ $t('mao.cropland') }}</span>
+      <span>{{ $t('mao.forest') }}</span>
       <a-tooltip :title="tooltip">
         <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
-          <template #icon><PlusSquareOutlined /></template>
+          <template #icon>
+            <PlusSquareOutlined />
+          </template>
           {{ $t('mao.tipOfBuild') }}
         </a-button>
       </a-tooltip>
     </a-typography-title>
   </a-col>
-  <a-col v-for="(item, idx) in resource.cropland" :key="item.id">
-    <a-button>{{ `${$t('mao.cropland')}${idx}` }}</a-button>
+  <a-col :span="24">
+    <a-space wrap>
+      <a-button v-for="(item, idx) in resource.forest" :key="item.id">{{ `${$t('mao.forest')}${idx}` }}</a-button>
+    </a-space>
   </a-col>
 </template>
 

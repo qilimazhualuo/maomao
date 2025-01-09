@@ -5,6 +5,7 @@ const lang = {
   mao: {
     // 存储
     happy: { zhcn: '幸福度', en: 'Happiness' },
+    resource: { zhcn: '资源', en: 'Resource' },
     all: { zhcn: '全部', en: 'All' },
     food: { zhcn: '食物', en: 'Food' },
     wood: { zhcn: '木材', en: 'Wood' },

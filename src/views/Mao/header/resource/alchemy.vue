@@ -40,8 +40,10 @@ const tooltip = computed(() => {
       </a-tooltip>
     </a-typography-title>
   </a-col>
-  <a-col v-for="(item, idx) in resource.alchemy" :key="item.id">
-    <a-button>{{ `${$t('mao.alchemy')}${idx}` }}</a-button>
+  <a-col :span="24">
+    <a-space wrap>
+      <a-button v-for="(item, idx) in resource.alchemy" :key="item.id">{{ `${$t('mao.alchemy')}${idx}` }}</a-button>
+    </a-space>
   </a-col>
 </template>
 

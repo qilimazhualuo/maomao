@@ -4,7 +4,7 @@ import '@/stores/resource'
 </script>
 
 <template>
-  <header>
+  <!-- <header>
     <div class="wrapper">
       <nav>
         <RouterLink to="/">Home</RouterLink>
@@ -14,7 +14,7 @@ import '@/stores/resource'
         <RouterLink to="/doc">文档处理</RouterLink>
       </nav>
     </div>
-  </header>
+  </header> -->
   <div class="content">
     <RouterView />
   </div>

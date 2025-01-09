@@ -34,14 +34,18 @@ const tooltip = computed(() => {
       <span>{{ $t('mao.market') }}</span>
       <a-tooltip :title="tooltip">
         <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
-          <template #icon><PlusSquareOutlined /></template>
+          <template #icon>
+            <PlusSquareOutlined />
+          </template>
           {{ $t('mao.tipOfBuild') }}
         </a-button>
       </a-tooltip>
     </a-typography-title>
   </a-col>
-  <a-col v-for="(item, idx) in resource.market" :key="item.id">
-    <a-button>{{ `${$t('mao.market')}${idx}` }}</a-button>
+  <a-col :span="24">
+    <a-space wrap>
+      <a-button v-for="(item, idx) in resource.market" :key="item.id">{{ `${$t('mao.market')}${idx}` }}</a-button>
+    </a-space>
   </a-col>
 </template>
 
