@@ -20,12 +20,16 @@ onMounted(() => {
 
 const drawHole = ({ geojson }) => {
     proxy.$refs.measureRef && proxy.$refs.measureRef.setDrawCallback(undefined)
+    proxy.$refs.measureRef && proxy.$refs.measureRef.clear()
     const feature = geojson.features.find(i => i.geometry.type === 'Polygon')
     if (!feature) {
         return
     }
-    const coors = feature.geometry.coordinates[0]
-    console.log(coors)
+    const positions = feature.geometry.coordinates[0].map((coor) => {
+        coor[2] = -10
+        return coor
+    })
+    map.setClip({ positions })
 }
 
 const startDrawHole = () => {

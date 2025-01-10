@@ -13,7 +13,7 @@ const props = defineProps({
  */
 const draw = ({ key }) => {
     if (key === 'clear') {
-        props.map.clear()
+        props.map.clearMeature()
         return
     }
     props.map.draw(key)
@@ -25,7 +25,10 @@ const setDrawCallback = (callback) => {
 
 defineExpose({
     draw,
-    setDrawCallback
+    setDrawCallback,
+    clear: () => {
+        props.map.clearMeature()
+    }
 })
 </script>
 
