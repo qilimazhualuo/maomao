@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons-vue'
 import Map from './map.vue'
+import Menu from '@/components/menu.vue'
 
 const pre = ref('')
 const next = ref([])
@@ -103,6 +104,7 @@ const move = (idx, up) => {
       <Map v-model:value="next" />
     </div>
   </div>
+  <Menu />
 </template>
 
 <style lang="less">

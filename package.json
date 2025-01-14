@@ -15,6 +15,7 @@
     "ant-design-vue": "4.x",
     "cesium": "^1.122.0",
     "cesium-navigation-es6": "^3.0.9",
+    "docx": "^9.1.0",
     "ol": "^10.2.1",
     "pinia": "^2.2.4",
     "pinia-plugin-persistedstate": "^4.1.1",
