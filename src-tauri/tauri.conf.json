@@ -19,6 +19,9 @@
         "open": false,
         "scope": [],
         "sidecar": false
+      },
+      "http": {
+        "all": true
       }
     },
     "bundle": {
@@ -68,7 +71,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "坐标",
+        "title": "猫猫",
         "width": 800
       }
     ]

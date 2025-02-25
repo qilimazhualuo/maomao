@@ -55,6 +55,9 @@ onUnmounted(() => {
     <p>
       <RouterLink to="/doc">文档处理</RouterLink>
     </p>
+    <p>
+      <RouterLink to="/ones">ones报告</RouterLink>
+    </p>
     <p>菜单1</p>
     <p>菜单2</p>
     <template #footer>

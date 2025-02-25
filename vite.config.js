@@ -37,6 +37,11 @@ export default defineConfig({
           target: 'http://118.89.125.148:25300',
           changeOrigin: true,
       },
+      '/ones': {
+        target: 'https://sz.ones.cn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/ones/, ''),
+      }
     }
   }
 })
