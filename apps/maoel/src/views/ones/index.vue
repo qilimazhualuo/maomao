@@ -1,7 +1,6 @@
 <script setup lang="jsx">
 import { ref, getCurrentInstance } from 'vue'
 import { JSEncrypt } from 'jsencrypt'
-import { ipcRenderer } from 'electron'
 
 const data = ref({
     email: '',
@@ -17,12 +16,19 @@ const rules = {
 }
 
 const name = ref('')
-
 const submit = (val) => {
     console.log(val)
-    ipcRenderer.invoke('test', val).then((res) => {
+    console.log(window.ipcRenderer.service)
+    window.ipcRenderer.service({
+        url: 'https://ones.cn/identity/api/encryption_cert',
+        method: 'post',
+    }).then((res) => {
         console.log(res)
+    }).catch((err) => {
+        console.log(err)
     })
+    // 调用electron方法
+
     // request({
     //     url: 'http://ones.cn/identity/api/encryption_cert',
     //     method: 'post',

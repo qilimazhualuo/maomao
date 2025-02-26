@@ -1,4 +1,5 @@
 import { ipcRenderer, contextBridge } from 'electron'
+import axios from 'axios'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -18,7 +19,12 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     const [channel, ...omit] = args
     return ipcRenderer.invoke(channel, ...omit)
   },
+  service(...args: Parameters<typeof ipcRenderer.invoke>) {
+    console.log(args)
+    return ipcRenderer.invoke('service', args)
+  }
 
   // You can expose other APTs you need here.
   // ...
 })
+

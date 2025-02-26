@@ -1,7 +1,22 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import axios from 'axios'
+
+const service = axios.create({
+  timeout: 1000,
+})
+
+// 拦截响应
+service.interceptors.response.use(
+  (response) => {
+    return response.data
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -37,6 +52,12 @@ function createWindow() {
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
+  })
+
+  ipcMain.handle('service', (...args) => {
+    const [event, omit] = args
+    console.log('service', omit)
+    return service(omit[0])
   })
 
   if (VITE_DEV_SERVER_URL) {
