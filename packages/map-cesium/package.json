@@ -1,0 +1,12 @@
+{
+  "name": "map-cesium",
+  "private": true,
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@turf/turf": "^7.2.0",
+    "cesium": "^1.126.0",
+    "cesium-navigation-es6": "^3.0.9"
+  }
+}
