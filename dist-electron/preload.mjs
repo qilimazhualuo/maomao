@@ -18,7 +18,6 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
     return electron.ipcRenderer.invoke(channel, ...omit);
   },
   service(...args) {
-    console.log(args);
     return electron.ipcRenderer.invoke("service", args);
   }
   // You can expose other APTs you need here.

@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import Menu from '@/components/menu.vue'
 import { guid } from '@/common/tool'
 
 const titles = ref([
@@ -45,7 +44,6 @@ const titles = ref([
             </a-typography>
         </a-tab-pane>
     </a-tabs>
-    <Menu />
 </template>
 
 <style lang="less">

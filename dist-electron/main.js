@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { ipcMain, app, BrowserWindow } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path$1 from "node:path";
@@ -16730,6 +16730,10 @@ service.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+ipcMain.handle("service", (...args) => {
+  const [event, omit] = args;
+  return service(omit[0]);
+});
 createRequire(import.meta.url);
 const __dirname = path$1.dirname(fileURLToPath(import.meta.url));
 process.env.APP_ROOT = path$1.join(__dirname, "..");

@@ -1,7 +1,6 @@
 <script setup>
 import Header from './header.vue'
 import Content from './content.vue'
-import Menu from '@/components/menu.vue'
 </script>
 
 <template>
@@ -9,7 +8,6 @@ import Menu from '@/components/menu.vue'
     <Header class="mao-header" />
     <Content class="mao-content" />
   </div>
-  <Menu />
 </template>
 
 <style lang="less" scoped>
