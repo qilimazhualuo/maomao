@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, watch, getCurrentInstance } from 'vue'
-import Map from 'map-ol'
+import Map from '@/common/map'
 
 const props = defineProps({
     value: {

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, getCurrentInstance, onMounted } from 'vue'
-import Scene from 'scene'
+import Scene from '@/common/three'
 
 const props = defineProps({
   class: {

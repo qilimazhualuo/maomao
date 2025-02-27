@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, getCurrentInstance, ref } from 'vue'
-import Map from 'map-cesium'
+import Map from '@/common/map3'
 import Meature from '@/components/Meature.vue'
 import radar from './radar.vue'
 
