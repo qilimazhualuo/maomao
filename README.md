@@ -36,4 +36,6 @@ git clone --recurse-submodules
 添加submodule方法
 ```sh
 git submodule add https://github.com/qilimazhualuo/3dmap.git src/common/map3
+git submodule add https://github.com/qilimazhualuo/three.git src/common/three
+git submodule add https://github.com/qilimazhualuo/2dMap.git src/common/map
 ```
