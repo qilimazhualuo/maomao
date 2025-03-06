@@ -9,44 +9,45 @@ const { proxy } = getCurrentInstance()
 const resource = useResourceStore()
 
 const canBuild = computed(() => {
-  const { value } = config.sawmill
-  return Object.keys(value).every((key) => {
-    return resource[key] >= value[key]
-  })
+    const { value } = config.sawmill
+    return Object.keys(value).every((key) => {
+        return resource[key] >= value[key]
+    })
 })
 const add = () => {
-  resource.product('sawmill')
+    resource.product('sawmill')
 }
 
 const tooltip = computed(() => {
-  const buildResource = config.room.value
-  return Object.keys(buildResource)
-    .map((resource) => {
-      return `${proxy.$t('mao.' + resource)} : ${buildResource[resource]}`
-    })
-    .join(' ')
+    const buildResource = config.room.value
+    return Object.keys(buildResource)
+        .map((resource) => {
+            return `${proxy.$t('mao.' + resource)} : ${buildResource[resource]}`
+        })
+        .join(' ')
 })
 </script>
 
 <template>
-  <a-col>
-    <a-typography-title :level="3">
-      <span>{{ $t('mao.sawmill') }}</span>
-      <a-tooltip :title="tooltip">
-        <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
-          <template #icon>
-            <PlusSquareOutlined />
-          </template>
-          {{ $t('mao.tipOfBuild') }}
-        </a-button>
-      </a-tooltip>
-    </a-typography-title>
-  </a-col>
-  <a-col :span="24">
-    <a-space wrap>
-      <a-button v-for="(item, idx) in resource.sawmill" :key="item.id">{{ `${$t('mao.sawmill')}${idx}` }}</a-button>
-    </a-space>
-  </a-col>
+    <a-col>
+        <a-typography-title :level="3">
+            <span>{{ $t('mao.sawmill') }}</span>
+            <a-tooltip :title="tooltip">
+                <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
+                    <template #icon>
+                        <PlusSquareOutlined />
+                    </template>
+                    {{ $t('mao.tipOfBuild') }}
+                </a-button>
+            </a-tooltip>
+        </a-typography-title>
+    </a-col>
+    <a-col :span="24">
+        <a-space wrap>
+            <a-button v-for="(item, idx) in resource.sawmill" :key="item.id">{{ `${$t('mao.sawmill')}${idx}`
+                }}</a-button>
+        </a-space>
+    </a-col>
 </template>
 
 <style lang="less"></style>

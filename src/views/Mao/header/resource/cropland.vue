@@ -9,44 +9,45 @@ const { proxy } = getCurrentInstance()
 const resource = useResourceStore()
 
 const canBuild = computed(() => {
-  const { value } = config.cropland
-  return Object.keys(value).every((key) => {
-    return resource[key] >= value[key]
-  })
+    const { value } = config.cropland
+    return Object.keys(value).every((key) => {
+        return resource[key] >= value[key]
+    })
 })
 const add = () => {
-  resource.product('cropland')
+    resource.product('cropland')
 }
 
 const tooltip = computed(() => {
-  const buildResource = config.cropland.value
-  return Object.keys(buildResource)
-    .map((resource) => {
-      return `${proxy.$t('mao.' + resource)} : ${buildResource[resource]}`
-    })
-    .join(' ')
+    const buildResource = config.cropland.value
+    return Object.keys(buildResource)
+        .map((resource) => {
+            return `${proxy.$t('mao.' + resource)} : ${buildResource[resource]}`
+        })
+        .join(' ')
 })
 </script>
 
 <template>
-  <a-col :span="24">
-    <a-typography-title :level="3">
-      <span>{{ $t('mao.cropland') }}</span>
-      <a-tooltip :title="tooltip">
-        <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
-          <template #icon>
-            <PlusSquareOutlined />
-          </template>
-          {{ $t('mao.tipOfBuild') }}
-        </a-button>
-      </a-tooltip>
-    </a-typography-title>
-  </a-col>
-  <a-col :span="24">
-    <a-space wrap>
-      <a-button v-for="(item, idx) in resource.cropland" :key="item.id">{{ `${$t('mao.cropland')}${idx}` }}</a-button>
-    </a-space>
-  </a-col>
+    <a-col :span="24">
+        <a-typography-title :level="3">
+            <span>{{ $t('mao.cropland') }}</span>
+            <a-tooltip :title="tooltip">
+                <a-button class="ms-2" :disabled="!canBuild" size="small" @click.stop="add">
+                    <template #icon>
+                        <PlusSquareOutlined />
+                    </template>
+                    {{ $t('mao.tipOfBuild') }}
+                </a-button>
+            </a-tooltip>
+        </a-typography-title>
+    </a-col>
+    <a-col :span="24">
+        <a-space wrap>
+            <a-button v-for="(item, idx) in resource.cropland" :key="item.id">{{ `${$t('mao.cropland')}${idx}`
+                }}</a-button>
+        </a-space>
+    </a-col>
 </template>
 
 <style lang="less"></style>
