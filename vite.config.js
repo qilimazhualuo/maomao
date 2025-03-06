@@ -1,8 +1,6 @@
 import { defineConfig } from 'vite'
-import path from 'node:path'
-import electron from 'vite-plugin-electron/simple'
 import vue from '@vitejs/plugin-vue'
-
+import path from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -10,8 +8,10 @@ import cesium from 'vite-plugin-cesium'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 
+const host = process.env.TAURI_DEV_HOST;
+
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(async () => ({
   plugins: [
     vue(),
     vueJsx(),
@@ -24,41 +24,32 @@ export default defineConfig({
         }),
       ],
     }),
-    electron({
-      main: {
-        // Shortcut of `build.lib.entry`.
-        entry: 'electron/main.js',
-      },
-      preload: {
-        // Shortcut of `build.rollupOptions.input`.
-        // Preload scripts may contain Web assets, so use the `build.rollupOptions.input` instead `build.lib.entry`.
-        input: path.join(__dirname, 'electron/preload.js'),
-      },
-      // Ployfill the Electron and Node.js API for Renderer process.
-      // If you want use Node.js in Renderer process, the `nodeIntegration` needs to be enabled in the Main process.
-      // See 👉 https://github.com/electron-vite/vite-plugin-electron-renderer
-      renderer: process.env.NODE_ENV === 'test'
-        // https://github.com/electron-vite/vite-plugin-electron-renderer/issues/78#issuecomment-2053600808
-        ? undefined
-        : {},
-    }),
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+
+  // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
+  //
+  // 1. prevent vite from obscuring rust errors
+  clearScreen: false,
+  // 2. tauri expects a fixed port, fail if that port is not available
   server: {
-    proxy: {
-      '/terrain': {
-          target: 'http://118.89.125.148:25300',
-          changeOrigin: true,
-      },
-      '/ones': {
-        target: 'https://sz.ones.cn',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/ones/, ''),
+    port: 1420,
+    strictPort: true,
+    host: host || false,
+    hmr: host
+      ? {
+        protocol: "ws",
+        host,
+        port: 1421,
       }
+      : undefined,
+    watch: {
+      // 3. tell vite to ignore watching `src-tauri`
+      ignored: ["**/src-tauri/**"],
     },
-  }
-})
+  },
+}));
