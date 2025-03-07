@@ -1,9 +1,6 @@
 <script setup lang="jsx">
 import { ref, getCurrentInstance } from 'vue'
-import { JSEncrypt } from 'jsencrypt'
 import { doPromise } from '@/common/tool'
-
-const { service } = window.ipcRenderer
 
 // 表格
 const searchData = ref({
