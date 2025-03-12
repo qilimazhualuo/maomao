@@ -122,7 +122,7 @@ impl HttpRequestOptions {
 pub async fn http_request(
     url: String,
     options: HttpRequestOptions,
-) -> Result<String, ApiError> {
+) -> Result<serde_json::Value, ApiError> { // 修改返回类型为 JSON Value
     // 构建完整 URL
     let full_url = options.build_url(&url)?;
 
@@ -156,16 +156,22 @@ pub async fn http_request(
             .text()
             .await
             .unwrap_or_else(|_| "无法读取错误响应体".to_string());
-
+        println!("❌ 错误: {}, 错误信息： {}", url, error_message);
         return Err(ApiError::HttpError {
             status: status.as_u16(),
             message: error_message,
         });
     }
 
-    // 读取成功响应
-    response
-        .text()
+    // 读取并解析 JSON 响应 ------------------------- [修改点]
+    let json_response: serde_json::Value = response
+        .json() // 直接解析为 JSON 格式
         .await
-        .map_err(|e| ApiError::Unknown(e.to_string()))
+        .map_err(|e| ApiError::HttpError {
+            status: status.as_u16(),
+            message: format!("响应 JSON 解析失败: {}", e),
+        })?;
+
+    println!("✅ 请求成功: {}", url);
+    Ok(json_response)
 }

@@ -1,6 +1,7 @@
 <script setup lang="jsx">
 import { ref, getCurrentInstance } from 'vue'
 import { doPromise } from '@/common/tool'
+import { request } from '@/common/request'
 
 // 表格
 const searchData = ref({
@@ -81,7 +82,7 @@ const getData = (val) => {
         taskFilterGQLConditions: [],
         users: [val.uuid],
     }
-    service({
+    request({
         url: 'https://sz.ones.cn/project/api/project/team/JJe6dBze/resource_management/member_schedule_detail',
         method: 'post',
         data,

@@ -1,30 +1,14 @@
-
-const baseUrl = 'http://118.89.125.148:9001/api'
+import { invoke } from '@tauri-apps/api/core'
 
 export const request = ({ url, method = 'get', params = {}, data = {}, headers = {}, timeout = 5000 }) => {
+    console.log(data)
     return new Promise((resolve, reject) => {
         url = url.includes('http') ? url : `${baseUrl}${url}`
-        for (const key in params) {
-            url += `${url.includes('?') ? '&' : '?'}${key}=${params[key]}`
-        }
-        fetch(url, {
-            timeout,
-            method,
-            headers: {
-                'Content-Type': 'application/json, text/plain, */*',
-                ...headers,
-            },
-            body: method === 'get' ? null : JSON.stringify(data),
-        }).then(res => {
-            if (res.json instanceof Function) {
-                return res.json()
-            } else {
-                return res.text()
-            }
-        }).then((res) => {
+        invoke('http_request', { url: url, options: { method, params, body: data, headers } }).then((res) => {
+            console.log('get success', res)
             resolve(res)
         }).catch((err) => {
-            reject(err)
+            console.log('get error', err)
         })
     })
 }
