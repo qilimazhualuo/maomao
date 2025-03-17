@@ -5,28 +5,23 @@ import { RouterLink } from 'vue-router'
 <template>
     <main class="px-2">
         <a-typography>
-            <a-typography-title>Introduction</a-typography-title>
+            <a-typography-title>demo合集</a-typography-title>
             <a-typography-paragraph>
                 In the process of internal desktop applications development, many different design specs and
                 implementations would be
                 involved, which might cause designers and developers difficulties and duplication and reduce the
                 efficiency of development.
             </a-typography-paragraph>
-            <p>
-                <RouterLink to="/mao">开始猫猫游戏</RouterLink>
-            </p>
-            <p>
-                <RouterLink to="/coors">坐标</RouterLink>
-            </p>
-            <p>
-                <RouterLink to="/map3d">地图</RouterLink>
-            </p>
-            <p>
-                <RouterLink to="/doc">文档处理</RouterLink>
-            </p>
-            <p>
-                <RouterLink to="/ones">ones报告</RouterLink>
-            </p>
+            <a-space direction="vertical" >
+                <a-button
+                    v-for="route in $router.getRoutes()"
+                    :key="route.path"
+                    @click.stop="goMenu(route)"
+                    type="link"
+                >
+                    {{route.meta.title }}
+                </a-button>
+            </a-space>
             <a-typography-paragraph>
                 After massive project practice and summaries, Ant Design, a design language for background applications,
                 is refined by Ant

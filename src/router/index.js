@@ -7,31 +7,37 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
+            meta: { title: '首页' },
             component: HomeView,
         },
         {
             path: '/mao',
             name: 'mao',
+            meta: { title: '猫猫游戏' },
             component: () => import('@/views/Mao/index.vue'),
         },
         {
             path: '/coors',
             name: 'coors',
+            meta: { title: '坐标转换' },
             component: () => import('@/views/coors/index.vue'),
         },
         {
             path: '/map3d',
             name: 'map3d',
+            meta: { title: '3d地图方法展示' },
             component: () => import('../views/map3d/index.vue'),
         },
         {
             path: '/doc',
             name: 'doc',
+            meta: { title: '文档生成' },
             component: () => import('../views/doc/index.vue'),
         },
         {
             path: '/ones',
             name: 'ones',
+            meta: { title: 'one工作总结' },
             component: () => import('../views/ones/index.vue'),
         },
     ],

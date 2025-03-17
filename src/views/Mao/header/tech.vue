@@ -16,7 +16,7 @@ const disabled = (item, parent) => {
 }
 
 const showModal = (e) => {
-    if (e.key === 't' && !open.value) {
+    if (e.key === 't') {
         open.value = !open.value
     }
 }

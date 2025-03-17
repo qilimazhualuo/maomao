@@ -50,12 +50,12 @@ const startDrawHole = () => {
                 <a-button @click="startDrawHole">点击绘制洞</a-button>
             </a-collapse-panel>
             <a-collapse-panel header="自定义primitive">
-                <radar v-if="mapOk" :map="map"/>
+                <radar v-if="mapOk" :map="map" />
             </a-collapse-panel>
         </a-collapse>
     </div>
     <div class="map" ref="mapRef">
-        <Meature v-if="mapOk" :map="map" ref="measureRef"/>
+        <Meature v-if="mapOk" :map="map" ref="measureRef" />
     </div>
 </template>
 
@@ -68,6 +68,7 @@ const startDrawHole = () => {
     overflow: auto;
     background-color: #6f717845;
 }
+
 .map {
     position: relative;
     width: 80%;

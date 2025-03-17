@@ -1,6 +1,19 @@
 <script setup>
+import { provide } from 'vue'
 import Header from './header.vue'
 import Content from './content.vue'
+
+const maomao = {
+    scene: null,
+    models: {
+        houses: [
+            { label: '森林小屋', url: '/models/house/forest_house.glb', author: 'peachyroyalty', origin: 'https://sketchfab.com/3d-models/forest-house-52429e4ef7bf4deda1309364a2cda86f' }
+        ]
+    }
+}
+
+provide('maomao', maomao)
+
 </script>
 
 <template>
@@ -21,10 +34,6 @@ import Content from './content.vue'
         flex: 1 1 auto;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 24px 36px -28px inset;
         overflow: hidden;
-
-        :deep(.ant-typography) {
-            margin-bottom: 4px;
-        }
     }
 }
 </style>

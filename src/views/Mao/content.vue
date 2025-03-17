@@ -1,5 +1,5 @@
 <script setup>
-import { computed, getCurrentInstance, onMounted } from 'vue'
+import { computed, getCurrentInstance, onMounted, inject } from 'vue'
 import Scene from '@/common/three'
 
 const props = defineProps({
@@ -13,13 +13,13 @@ const { proxy } = getCurrentInstance()
 
 const className = computed(() => `content ${props.class}`)
 
-let scene
+const maomao = inject('maomao')
 
 onMounted(() => {
-    scene = new Scene({ dom: proxy.$refs.scene })
-    scene.addBox({ width: 10, height: 10, depth: 10, color: "#fff0ff", position: { x: 0, y: 0, z: 5 } })
-    scene.addPlane({ width: 100, height: 100, color: "#fff0ff" })
-    scene.goView({ x: 10, y: 10, z: 10 }, 100)
+    maomao.scene = new Scene({ dom: proxy.$refs.scene })
+    maomao.scene.addBox({ width: 10, height: 10, depth: 10, color: "#fff0ff", position: { x: 0, y: 0, z: 5 } })
+    maomao.scene.addPlane({ width: 100, height: 100, color: "#fff0ff" })
+    maomao.scene.goView({ x: 10, y: 10, z: 10 }, 100)
 })
 </script>
 
