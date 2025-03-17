@@ -2,6 +2,8 @@
 import { ref, getCurrentInstance } from 'vue'
 import { doPromise } from '@/common/tool'
 import { request } from '@/common/request'
+import uuidPromit from './img/uuid.png'
+import tokenPromit from './img/token.png'
 
 // 表格
 const searchData = ref({
@@ -143,13 +145,35 @@ const columns = [
 <template>
     <div class="ones">
         <a-typography>
-            <a-typography-title >ones</a-typography-title>
+            <a-typography-title >ones - 鼠标悬浮在label上可以看到提示</a-typography-title>
         </a-typography>
         <a-form :model="searchData" :rules="searchRules" @finish="getData">
-            <a-form-item name="uuid" label="ones uuid">
+            <a-form-item name="uuid">
+                <template #label>
+                    <a-tooltip placement="right">
+                        <template #title>
+                            <a-image
+                                :width="200"
+                                :src="uuidPromit"
+                            />
+                        </template>
+                        ones uuid
+                    </a-tooltip>
+                </template>
                 <a-input v-model:value="searchData.uuid" placeholder="请输入 uuid"></a-input>
             </a-form-item>
-            <a-form-item name="token" label="ones token">
+            <a-form-item name="token">
+                <template #label>
+                    <a-tooltip placement="right">
+                        <template #title>
+                            <a-image
+                                :width="200"
+                                :src="tokenPromit"
+                            />
+                        </template>
+                        ones token
+                    </a-tooltip>
+                </template>
                 <a-input v-model:value="searchData.token" placeholder="请输入 token"></a-input>
             </a-form-item>
             <a-form-item name="time" label="时间">
