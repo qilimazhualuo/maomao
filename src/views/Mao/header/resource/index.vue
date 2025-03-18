@@ -77,13 +77,13 @@ const goldColor = computed(() => {
         <a-row class="h-100">
             <a-col :span="12" class="left h-100 overflow">
                 <a-row :gutter="[0, 8]">
-                    <room />
-                    <cropland />
-                    <forest />
-                    <sawmill />
-                    <mine />
-                    <alchemy />
-                    <market />
+                    <room v-model:open="open"/>
+                    <cropland v-model:open="open"/>
+                    <forest v-model:open="open"/>
+                    <sawmill v-model:open="open"/>
+                    <mine v-model:open="open"/>
+                    <alchemy v-model:open="open"/>
+                    <market v-model:open="open"/>
                 </a-row>
             </a-col>
             <a-col :span="12" class="right h-100 overflow ps-2">

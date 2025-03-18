@@ -1,8 +1,13 @@
 <script setup>
-import { computed, getCurrentInstance } from 'vue'
+import { computed, getCurrentInstance, inject } from 'vue'
 import { PlusSquareOutlined } from '@ant-design/icons-vue'
 import { useResourceStore } from '@/stores/resource'
 import { config } from '@/config/mao_config'
+
+defineProps({
+    open: Boolean
+})
+const emit = defineEmits(['update:open'])
 
 const { proxy } = getCurrentInstance()
 
@@ -14,8 +19,14 @@ const canBuild = computed(() => {
         return resource[key] >= value[key]
     })
 })
+
+const maomao = inject('maomao')
 const add = () => {
     resource.product('room')
+    emit('update:open', false)
+    maomao.addModel().then(() => {
+        emit('update:open', true)
+    })
 }
 
 const tooltip = computed(() => {

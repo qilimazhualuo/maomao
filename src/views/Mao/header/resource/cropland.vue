@@ -4,6 +4,11 @@ import { PlusSquareOutlined } from '@ant-design/icons-vue'
 import { useResourceStore } from '@/stores/resource'
 import { config } from '@/config/mao_config'
 
+defineProps({
+    open: Boolean
+})
+const emit = defineEmits(['update:open'])
+
 const { proxy } = getCurrentInstance()
 
 const resource = useResourceStore()
