@@ -1,5 +1,20 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { getCurrentInstance, ref } from 'vue'
+
+const { proxy } = getCurrentInstance()
+
+const loading = ref(false)
+const goMenu = (route) => {
+    loading.value = true
+    proxy.$router
+        .push(route.path)
+        .then(() => {
+            open.value = false
+        })
+        .finally(() => {
+            loading.value = false
+        })
+}
 </script>
 
 <template>
@@ -18,6 +33,7 @@ import { RouterLink } from 'vue-router'
                     :key="route.path"
                     @click.stop="goMenu(route)"
                     type="link"
+                    :loading="loading"
                 >
                     {{route.meta.title }}
                 </a-button>
