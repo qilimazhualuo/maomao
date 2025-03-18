@@ -11,16 +11,16 @@ const maomao = {
                 label: '森林小屋',
                 url: '/models/house/forest_house.glb',
                 author: 'peachyroyalty',
-                origin: 'https://sketchfab.com/3d-models/forest-house-52429e4ef7bf4deda1309364a2cda86f'
+                origin: 'https://sketchfab.com/3d-models/forest-house-52429e4ef7bf4deda1309364a2cda86f',
+                type: 'glb'
             }
         ]
     },
     // 添加建筑
     addModel(url) {
-        console.log(this)
         return new Promise((resolve) => {
-            this.scene.addModel(url)
-            resolve()
+            const model = this.scene.addModel(url)
+            resolve(model)
         })
     },
 }
