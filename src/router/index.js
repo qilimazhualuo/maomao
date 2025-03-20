@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '@/views/HomeView.vue'
 
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -26,19 +26,25 @@ const router = createRouter({
             path: '/map3d',
             name: 'map3d',
             meta: { title: '3d地图方法展示' },
-            component: () => import('../views/map3d/index.vue'),
+            component: () => import('@/views/map3d/index.vue'),
+        },
+        {
+            path: '/building',
+            name: 'building',
+            meta: { title: '3d地图方法展示-模型', hidden: true },
+            component: () => import('@/views/building/index.vue'),
         },
         {
             path: '/doc',
             name: 'doc',
             meta: { title: '文档生成' },
-            component: () => import('../views/doc/index.vue'),
+            component: () => import('@/views/doc/index.vue'),
         },
         {
             path: '/ones',
             name: 'ones',
             meta: { title: 'one工作总结' },
-            component: () => import('../views/ones/index.vue'),
+            component: () => import('@/views/ones/index.vue'),
         },
     ],
 })

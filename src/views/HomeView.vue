@@ -29,7 +29,7 @@ const goMenu = (route) => {
             </a-typography-paragraph>
             <a-space direction="vertical" >
                 <a-button
-                    v-for="route in $router.getRoutes()"
+                    v-for="route in $router.getRoutes().filter(i => !i.meta.hidden)"
                     :key="route.path"
                     @click.stop="goMenu(route)"
                     type="link"

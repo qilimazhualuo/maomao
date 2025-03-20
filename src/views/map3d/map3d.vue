@@ -8,6 +8,8 @@ const { proxy } = getCurrentInstance()
 
 let map
 const mapOk = ref(false)
+const cursor = ref(false)
+
 onMounted(() => {
     map = new Map({
         target: proxy.$refs.mapRef,
@@ -15,6 +17,29 @@ onMounted(() => {
         zoom: 10,
     })
     map.loadMap('gaode')
+    const layerId = map.createLayer()
+    map.createPoint({
+        longitude: 120,
+        latitude: 30,
+        img: '/map3d/mark.png',
+        properties: {
+            name: 'building',
+            model: '/map3d/su-57.glb',
+        }
+    }, layerId)
+    map.addEvent('click', ({ properties }) => {
+        const { name, model } = properties
+        proxy.$router.push({
+            name,
+            query: {
+                model
+            }
+        })
+    }, layerId)
+    // 鼠标悬浮到entity上时变成手
+    map.addEvent('mousemove', ({ feature }) => {
+        cursor.value = !!feature
+    })
     mapOk.value = true
 })
 
@@ -54,7 +79,7 @@ const startDrawHole = () => {
             </a-collapse-panel>
         </a-collapse>
     </div>
-    <div class="map" ref="mapRef">
+    <div class="map" :class="{ cursor }" ref="mapRef">
         <Meature v-if="mapOk" :map="map" ref="measureRef" />
     </div>
 </template>
@@ -74,5 +99,8 @@ const startDrawHole = () => {
     width: 80%;
     height: 100%;
     flex: 1 1 auto;
+    &.cursor {
+        cursor: pointer;
+    }
 }
 </style>
