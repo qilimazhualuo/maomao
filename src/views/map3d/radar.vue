@@ -1,12 +1,7 @@
 <script setup lang="jsx">
-import { ref, watch } from 'vue'
+import { ref, watch, inject } from 'vue'
 
-const props = defineProps({
-    map: {
-        type: Object,
-        default: () => ({}),
-    },
-})
+const mapObj = inject('mapObj')
 
 const options = [
     { label: '一型雷达', value: 'radar1', params: ['radius'] },
@@ -61,7 +56,7 @@ const setCoors = ({ coordinate }) => {
     radarFormState.value.latitude = lat
 }
 
-props.map.addEvent('click', setCoors)
+mapObj.map.addEvent('click', setCoors)
 
 const columns = [
     {
@@ -87,7 +82,7 @@ const columns = [
                         size="small"
                         onClick={() => {
                             const { longitude, latitude, radius } = record
-                            props.map.setCenter([longitude, latitude], radius * 1.2)
+                            mapObj.map.setCenter([longitude, latitude], radius * 1.2)
                         }}
                     >
                         定位
@@ -127,14 +122,14 @@ watch(
         val.forEach((item) => {
             if (oldVal.findIndex((i) => i.id === item.id) === -1) {
                 const { type, longitude, latitude, id } = item
-                props.map[type]({ position: [longitude, latitude], layerId: id, ...item })
+                mapObj.map[type]({ position: [longitude, latitude], layerId: id, ...item })
             }
         })
         // 删除
         oldVal.forEach((item) => {
             if (val.findIndex((i) => i.id === item.id) === -1) {
                 const { id } = item
-                props.map.removeRadar(id)
+                mapObj.map.removeRadar(id)
             }
         })
     }
@@ -142,15 +137,15 @@ watch(
 </script>
 
 <template>
-    <a-alert message="点击地图可拾取坐标" type="info" class="mb-2" />
-    <a-form ref="formRef" :rules="rules" :model="radarFormState" @finish="finish" class="raderForm">
-        <a-form-item label="雷达类型" :labelCol="{ span: 8 }" :wrapperCol="{ span: 16 }">
+    <a-alert message="点击地图拾取坐标" type="info" class="mb-2" />
+    <a-form ref="formRef" layout="vertical" :rules="rules" :model="radarFormState" @finish="finish" class="raderForm">
+        <a-form-item label="雷达类型">
             <a-select v-model:value="activeChooseRader" label-in-value :options="options" />
         </a-form-item>
-        <a-form-item label="经度" name="longitude" :labelCol="{ span: 8 }" :wrapperCol="{ span: 16 }">
+        <a-form-item label="经度" name="longitude">
             <a-input-number style="width: 100%" v-model:value="radarFormState.longitude" />
         </a-form-item>
-        <a-form-item label="纬度" name="latitude" :labelCol="{ span: 8 }" :wrapperCol="{ span: 16 }">
+        <a-form-item label="纬度" name="latitude">
             <a-input-number style="width: 100%" v-model:value="radarFormState.latitude" />
         </a-form-item>
         <a-form-item
@@ -158,8 +153,6 @@ watch(
             :key="item"
             :name="item"
             :label="radarMap[item]"
-            :labelCol="{ span: 8 }"
-            :wrapperCol="{ span: 16 }"
         >
             <a-input-number style="width: 100%" v-model:value="radarFormState[item]" />
         </a-form-item>
