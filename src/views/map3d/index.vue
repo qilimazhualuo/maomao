@@ -3,7 +3,7 @@ import { onMounted, getCurrentInstance, ref, provide } from 'vue'
 import Map from '@/common/map3'
 import Meature from '@/components/Meature.vue'
 import radar from './radar.vue'
-import track from './track/index.vue'
+import Track from './track/index.vue'
 
 const { proxy } = getCurrentInstance()
 
@@ -87,7 +87,7 @@ const startDrawHole = () => {
                     <radar v-if="mapOk"/>
                 </a-collapse-panel>
                 <a-collapse-panel header="轨迹">
-                    <track v-if="mapOk"/>
+                    <Track v-if="mapOk"/>
                 </a-collapse-panel>
             </a-collapse>
         </div>
