@@ -3,12 +3,11 @@ import { onMounted, getCurrentInstance, ref, provide } from 'vue'
 import Map from '@/common/map3'
 import Meature from '@/components/Meature.vue'
 import radar from './radar.vue'
-import Track from './track/index.vue'
+import Track from './track.vue'
 
 const { proxy } = getCurrentInstance()
 
 const mapOk = ref(false)
-const cursor = ref(false)
 
 const mapObj = {
     map: null,
@@ -44,10 +43,6 @@ onMounted(() => {
             }
         })
     }, layerId)
-    // 鼠标悬浮到entity上时变成手
-    mapObj.map.addEvent('mousemove', ({ feature }) => {
-        cursor.value = !!feature
-    })
     mapOk.value = true
 })
 
@@ -91,7 +86,7 @@ const startDrawHole = () => {
                 </a-collapse-panel>
             </a-collapse>
         </div>
-        <div class="map" :class="{ cursor }" ref="mapRef">
+        <div class="map" ref="mapRef">
             <Meature v-if="mapOk" :map="mapObj.map" ref="measureRef" />
         </div>
     </div>
@@ -122,9 +117,6 @@ const startDrawHole = () => {
     width: 80%;
     height: 100%;
     flex: 1 1 auto;
-
-    &.cursor {
-        cursor: pointer;
-    }
+    overflow: hidden;
 }
 </style>

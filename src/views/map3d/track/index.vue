@@ -1,4 +1,5 @@
 <script setup lang="jsx">
+import { ref, getCurrentInstance, inject, watch } from 'vue'
 import { notification } from 'ant-design-vue'
 import * as turf from '@turf/turf'
 import { Cartesian3, ShadowMode, JulianDate } from 'cesium'

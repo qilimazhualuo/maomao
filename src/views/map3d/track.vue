@@ -1,14 +1,10 @@
 <script setup lang="jsx">
-import { ref, getCurrentInstance, watch } from 'vue'
+import { ref, getCurrentInstance, watch, inject } from 'vue'
 import * as turf from '@turf/turf'
-import { CaretRightOutlined, PauseOutlined } from '@ant-design/icons-vue'
+import { CaretRightOutlined, PauseOutlined, FastBackwardOutlined, FastForwardOutlined } from '@ant-design/icons-vue'
 import { Cartesian3, ShadowMode, JulianDate } from 'cesium'
 
 const props = defineProps({
-    map: {
-        type: Object,
-        default: () => ({}),
-    },
     setTrack: {
         type: Function,
         default: () => {},
@@ -20,6 +16,8 @@ const props = defineProps({
 })
 
 const { proxy } = getCurrentInstance()
+
+const mapObj = inject('mapObj')
 
 const equipData = [
     { label: '苏-35', value: '/map3d/su-57.glb' }
@@ -35,11 +33,11 @@ const formData = ref({})
 
 const startDraw = () => {
     if (formData.value.points) {
-        props.map.clearMeature()
+        mapObj.map.clearMeature()
         formData.value.points = undefined
         return
     }
-    props.map.draw('LineString', {}, true).then(({ geojson }) => {
+    mapObj.map.draw('LineString', {}, true).then(({ geojson }) => {
         formData.value.points = geojson.features[0].geometry.coordinates.map(([longitude, latitude, height]) => {
             return { longitude, latitude, height: height + 100, speed: 100 }
         })
@@ -48,9 +46,9 @@ const startDraw = () => {
 }
 
 const save = () => {
-    props.map.clearMeature()
+    mapObj.map.clearMeature()
     const { points, model, name } = formData.value
-    data.value = [...data.value, { points, model, name, id: props.map.guid() }]
+    data.value = [...data.value, { points, model, name, id: mapObj.map.guid() }]
     formData.value = {}
 }
 
@@ -58,7 +56,6 @@ const save = () => {
 // 起始时间
 const startTime = new Date('2021-07-01T07:22:14.000+0000').toISOString()
 const createFly = ({ points, model, id }) => {
-    console.log('aaaaaaaaaaaaaaaaa')
     let temp
     const data = points.reduce((prev, { longitude, latitude, height, speed }, i, arr) => {
         // 每隔一百米增加一秒
@@ -92,7 +89,7 @@ const createFly = ({ points, model, id }) => {
     const modalItem = equipData.find((item) => item.value === model)
     titleDom.innerHTML = modalItem.label
     let timeTemp
-    props.map.addTrack({
+    mapObj.map.addTrack({
         moveCallback: (poi, time) => {
             // 不能执行太快
             if (!timeTemp) {
@@ -106,7 +103,7 @@ const createFly = ({ points, model, id }) => {
             }
             // 在这里更新overlay的值
             // poi 是ces3格式
-            const [lng, lat, height] = props.map.Cartesian3_to_WGS84(poi)
+            const [lng, lat, height] = mapObj.map.proToGeo(poi)
             props.updateTrack instanceof Function && props.updateTrack(id, [lng, lat, height], true)
             const lngRes = lng.toFixed(6)
             const latRes = lat.toFixed(6)
@@ -131,7 +128,7 @@ const createFly = ({ points, model, id }) => {
         pointsArr: data,
         moveStyle: [
             {
-                model: `/api/rfstealth/equipment/download?id=${model}`,
+                model: model,
                 minimumPixelSize: 128, // 最小像素大小
                 maximumScale: 500, // 模型的最大比例尺大小。 minimumPixelSize的上限
                 incrementallyLoadTextures: true, // 加载模型后纹理是否可以继续流入
@@ -177,14 +174,14 @@ const trackColumns = [
         customRender: ({ text, record }) => {
             return (
                 <>
-                    <a-button style="margin-right: 12px;" size="small"
+                    {/* <a-button style="margin-right: 12px;" size="small"
                         onClick={() => {
-                            props.setEditData(record)
+                            setEditData(record)
                             data.value = data.value.filter((i) => i.id !== text)
                         }}
                     >
                         编辑
-                    </a-button>
+                    </a-button> */}
                     <a-button size="small"
                         onClick={() => {
                             data.value = data.value.filter((i) => i.id !== text)
@@ -213,7 +210,7 @@ watch(
         oldVal.forEach((item) => {
             if (val.findIndex((i) => i.id === item.id) === -1) {
                 const { id } = item
-                props.map.removeTrack(id)
+                mapObj.map.removeTrack(id)
                 props.setTrack instanceof Function && props.delTrack(id, true)
             }
         })
@@ -221,6 +218,24 @@ watch(
 )
 
 const isPlay = ref(false)
+const play = () => {
+    isPlay.value = !isPlay.value
+    if (isPlay.value) {
+        mapObj.map.playTrack()
+    } else {
+        mapObj.map.stopTrack()
+    }
+}
+
+const backward = () => {
+    const speed = mapObj.map.trackSpeed
+    mapObj.map.setTrackSpeed(speed / 2)
+}
+
+const forward = () => {
+    const speed = mapObj.map.trackSpeed
+    mapObj.map.setTrackSpeed(speed * 2)
+}
 </script>
 
 <template>
@@ -255,12 +270,24 @@ const isPlay = ref(false)
                 </a-button>
             </a-form>
         </div>
-        <a-button shape="circle">
-            <template #icon>
-                <PauseOutlined v-if="isPlay"/>
-                <CaretRightOutlined v-else/>
-            </template>
-        </a-button>
+        <a-space>
+            <a-button shape="circle" @click.stop="play">
+                <template #icon>
+                    <PauseOutlined v-if="isPlay"/>
+                    <CaretRightOutlined v-else/>
+                </template>
+            </a-button>
+            <a-button shape="circle" @click.stop="backward">
+                <template #icon>
+                    <FastBackwardOutlined />
+                </template>
+            </a-button>
+            <a-button shape="circle" @click.stop="forward">
+                <template #icon>
+                    <FastForwardOutlined />
+                </template>
+            </a-button>
+        </a-space>
     </a-space>
     <a-table
         style="margin-top: 12px;"
