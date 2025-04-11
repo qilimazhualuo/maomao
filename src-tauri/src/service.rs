@@ -51,8 +51,24 @@ pub enum ApiError {
     #[error("不支持的方法携带请求体: {0}")]
     BodyNotAllowed(String),
 
+    #[error("响应解析失败: {0}")]
+    ParseError(String),
+
     #[error("未知错误: {0}")]
     Unknown(String),
+}
+
+// 添加错误类型转换
+impl From<serde_json::Error> for ApiError {
+    fn from(err: serde_json::Error) -> Self {
+        ApiError::ParseError(format!("JSON解析失败: {}", err))
+    }
+}
+
+impl From<std::string::FromUtf8Error> for ApiError {
+    fn from(err: std::string::FromUtf8Error) -> Self {
+        ApiError::ParseError(format!("UTF-8解码失败: {}", err))
+    }
 }
 
 // 实现 reqwest 错误到自定义错误的转换
@@ -118,11 +134,41 @@ impl HttpRequestOptions {
     }
 }
 
+// 新增响应类型枚举
+#[derive(Debug, Serialize)]
+#[serde(untagged)] // 确保无标签序列化]
+pub enum HttpResponse {
+    // 直接返回JSON值本身
+    DirectJson(serde_json::Value),
+    
+    // 文本直接作为字符串返回
+    DirectText(String),
+    
+    // 二进制保持结构体形式
+    Binary {
+        #[serde(rename = "contentType")]
+        content_type: String,
+        #[serde(with = "base64_bytes")]
+        data: Vec<u8>,
+    }
+}
+
+// 自定义base64序列化模块
+mod base64_bytes {
+    use base64::Engine;
+    use serde::Serializer;
+
+    pub fn serialize<S: Serializer>(bytes: &[u8], serializer: S) -> Result<S::Ok, S::Error> {
+        let encoded = base64::engine::general_purpose::STANDARD.encode(bytes);
+        serializer.serialize_str(&encoded)
+    }
+}
+
 #[tauri::command]
 pub async fn http_request(
     url: String,
     options: HttpRequestOptions,
-) -> Result<serde_json::Value, ApiError> { // 修改返回类型为 JSON Value
+) -> Result<HttpResponse, ApiError> { // 修改返回类型为 JSON Value
     // 构建完整 URL
     let full_url = options.build_url(&url)?;
 
@@ -163,15 +209,35 @@ pub async fn http_request(
         });
     }
 
-    // 读取并解析 JSON 响应 ------------------------- [修改点]
-    let json_response: serde_json::Value = response
-        .json() // 直接解析为 JSON 格式
-        .await
-        .map_err(|e| ApiError::HttpError {
-            status: status.as_u16(),
-            message: format!("响应 JSON 解析失败: {}", e),
-        })?;
+    // 获取 Content-Type 头
+    let content_type = response.headers()
+        .get(reqwest::header::CONTENT_TYPE)
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream")
+        .split(';')
+        .next()
+        .unwrap_or("application/octet-stream")
+        .to_lowercase();
+    
+    // 读取响应体字节
+    let body_bytes = response.bytes().await?;
+
+    // 根据 Content-Type 处理数据
+    let result = match content_type.as_str() {
+        "application/json" => {
+            let json_value: serde_json::Value = serde_json::from_slice(&body_bytes)?; // 现在可以自动转换错误
+            Ok(HttpResponse::DirectJson(json_value))
+        },
+        "text/plain" | "text/html" | "application/xml" => {
+            let text = String::from_utf8(body_bytes.to_vec())?; // 现在可以自动转换错误
+            Ok(HttpResponse::DirectText(text))
+        },
+        _ => Ok(HttpResponse::Binary {
+            content_type,
+            data: body_bytes.to_vec(),
+        }),
+    };
 
     println!("✅ 请求成功: {}", url);
-    Ok(json_response)
+    result
 }
