@@ -46,6 +46,12 @@ const router = createRouter({
             meta: { title: 'one工作总结' },
             component: () => import('@/views/ones/index.vue'),
         },
+        {
+            path: '/bilili',
+            name: 'bilili',
+            meta: { title: 'b站视频' },
+            component: () => import('@/views/bilili/index.vue'),
+        },
     ],
 })
 

@@ -26,11 +26,11 @@ const goMenu = (route) => {
 }
 
 onMounted(() => {
-    document.addEventListener('keydown', showModal);
+    document.addEventListener('keydown', showModal)
 })
 
 onUnmounted(() => {
-    document.removeEventListener('keydown', showModal);
+    document.removeEventListener('keydown', showModal)
 })
 </script>
 
