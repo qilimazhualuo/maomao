@@ -24,6 +24,7 @@ onMounted(() => {
         zoom: 10,
     })
     mapObj.map.loadMap('gaode')
+    mapObj.map.loadTerrian('http://118.89.125.148:25300/terrain')
     const layerId = mapObj.map.createLayer()
     mapObj.map.createPoint({
         longitude: 120,
@@ -32,6 +33,15 @@ onMounted(() => {
         properties: {
             name: 'building',
             model: '/map3d/su-57.glb',
+        }
+    }, layerId)
+    mapObj.map.createPoint({
+        longitude: 123,
+        latitude: 32,
+        img: '/map3d/mark.png',
+        properties: {
+            name: 'building1',
+            model: '/map3d/soldier.glb',
         }
     }, layerId)
     mapObj.map.addEvent('click', ({ properties }) => {
@@ -71,11 +81,7 @@ const startDrawHole = () => {
         <div class="menu p-2">
             <a-collapse>
                 <a-collapse-panel header="绘制">
-                    <a-typography-title :level="2">3dmap绘制功能</a-typography-title>
-                    <a-typography-paragraph>
-                        鼠标悬浮到地图右上角的 <a-typography-text strong>绘制</a-typography-text> 按钮，选择绘制功能，
-                        即可在地图上绘制点、线、面、圆等图形，并支持编辑和删除。
-                    </a-typography-paragraph>
+                    <a-typography-title :level="2">地图挖坑</a-typography-title>
                     <a-button @click="startDrawHole">点击绘制洞</a-button>
                 </a-collapse-panel>
                 <a-collapse-panel header="一些雷达">

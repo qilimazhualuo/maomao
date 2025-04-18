@@ -52,6 +52,12 @@ const router = createRouter({
             meta: { title: 'b站视频' },
             component: () => import('@/views/bilili/index.vue'),
         },
+        {
+            path: '/sceneMake',
+            name: 'sceneMake',
+            meta: { title: '全景切图' },
+            component: () => import('@/views/sceneMake/index.vue'),
+        },
     ],
 })
 
