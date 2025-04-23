@@ -98,7 +98,9 @@ const getData = (val) => {
             const { name, project } = cur
             const item = items.find((item) => item.name === project.name)
             if (item) {
-                item.content.push(name)
+                if (!item.content.find(i => i === name)) {
+                    item.content.push(name)
+                }
                 item.hour += cur.manhour.hours / 100000
             } else {
                 items.push({
