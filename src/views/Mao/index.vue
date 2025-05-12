@@ -36,7 +36,7 @@ provide('maomao', maomao)
     </div>
 </template>
 
-<style lang="less" scoped>
+<style lang="less">
 .mao-container {
     height: 100%;
     display: flex;
