@@ -4,12 +4,13 @@ import { doPromise } from '@/common/tool'
 import { request } from '@/common/request'
 import uuidPromit from './img/uuid.png'
 import tokenPromit from './img/token.png'
+import dayjs from 'dayjs'
 
 // 表格
 const searchData = ref({
     uuid: '',
     token: '',
-    time: []
+    time: [dayjs().subtract(1, 'month').date(25), dayjs().date(24)],
 })
 
 const searchRules = {

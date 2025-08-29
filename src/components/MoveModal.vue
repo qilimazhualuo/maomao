@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, CSSProperties, watch, watchEffect, getCurrentInstance } from 'vue'
+import { ref, computed, watch, watchEffect, getCurrentInstance } from 'vue'
 import { useDraggable } from '@vueuse/core'
 
 const props = defineProps({
@@ -15,7 +15,7 @@ const props = defineProps({
 
 const { proxy } = getCurrentInstance()
 
-const open = ref<boolean>(props.visible)
+const open = ref(props.visible)
 watch(
     () => props.visible,
     (val) => {
@@ -27,8 +27,8 @@ const modalTitleRef = ref(null)
 
 const { x, y, isDragging } = useDraggable(modalTitleRef)
 
-const startX = ref<number>(0)
-const startY = ref<number>(0)
+const startX = ref(0)
+const startY = ref(0)
 const startedDrag = ref(false)
 const transformX = ref(0)
 const transformY = ref(0)
@@ -62,7 +62,7 @@ watchEffect(() => {
             preTransformY.value + Math.min(Math.max(dragRect.value.top, y.value), dragRect.value.bottom) - startY.value
     }
 })
-const transformStyle = computed<CSSProperties>(() => {
+const transformStyle = computed(() => {
     return {
         transform: `translate(${transformX.value}px, ${transformY.value}px)`
     }

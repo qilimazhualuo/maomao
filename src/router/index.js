@@ -41,6 +41,12 @@ const router = createRouter({
             component: () => import('@/views/doc/index.vue'),
         },
         {
+            path: '/docView',
+            name: 'docView',
+            meta: { title: '文档预览' },
+            component: () => import('@/views/docView/index.vue'),
+        },
+        {
             path: '/ones',
             name: 'ones',
             meta: { title: 'one工作总结' },
@@ -57,6 +63,12 @@ const router = createRouter({
             name: 'sceneMake',
             meta: { title: '全景切图' },
             component: () => import('@/views/sceneMake/index.vue'),
+        },
+        {
+            path: '/roadjianbo',
+            name: 'roadjianbo',
+            meta: { title: '建波的路' },
+            component: () => import('@/views/jianboRoad/index.vue'),
         },
     ],
 })

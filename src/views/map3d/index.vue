@@ -1,11 +1,26 @@
 <script setup>
-import { onMounted, getCurrentInstance, ref, provide } from 'vue'
+import { onMounted, onUnmounted, getCurrentInstance, ref, provide } from 'vue'
 import Map from '@/common/map3'
 import Meature from '@/components/Meature.vue'
+import MoveModel from '@/components/MoveModal.vue'
 import radar from './radar.vue'
 import Track from './track.vue'
 
 const { proxy } = getCurrentInstance()
+
+const visible = ref(false)
+const showModal = (e) => {
+    if (e.code !== 'Space') {
+        return
+    }
+    visible.value = !visible.value
+}
+onMounted(() => {
+    document.addEventListener('keydown', showModal)
+})
+onUnmounted(() => {
+    document.removeEventListener('keydown', showModal)
+})
 
 const mapOk = ref(false)
 
@@ -23,7 +38,7 @@ onMounted(() => {
         center: [120, 30],
         zoom: 10,
     })
-    mapObj.map.loadMap('gaode')
+    mapObj.map.loadMap({ mapType: 'tianditu', token: '2bbee26e4904189b1184091de22f3c68' })
     mapObj.map.loadTerrian('http://118.89.125.148:25300/terrain')
     const layerId = mapObj.map.createLayer()
     mapObj.map.createPoint({
@@ -67,7 +82,8 @@ const drawHole = ({ geojson }) => {
         coor[2] = -10
         return coor
     })
-    map.setClip({ positions })
+    console.log(positions)
+    mapObj.map.setClip({ positions })
 }
 
 const startDrawHole = () => {
@@ -78,10 +94,22 @@ const startDrawHole = () => {
 
 <template>
     <div class="map3d">
-        <div class="menu p-2">
+        <div class="map" ref="mapRef">
+            <Meature v-if="mapOk" :map="mapObj.map" ref="measureRef" />
+        </div>
+    </div>
+    <MoveModel
+        v-if="mapOk"
+        v-model:visible="visible"
+        :footer="false"
+        :mask="false"
+        title="菜单"
+        class="map3d-menu"
+        :style="{ width: '300px', left: '10px', top: '10px' }"
+    >
+        <div class="map3d-menu-content">
             <a-collapse>
-                <a-collapse-panel header="绘制">
-                    <a-typography-title :level="2">地图挖坑</a-typography-title>
+                <a-collapse-panel header="绘制洞">
                     <a-button @click="startDrawHole">点击绘制洞</a-button>
                 </a-collapse-panel>
                 <a-collapse-panel header="一些雷达">
@@ -90,39 +118,32 @@ const startDrawHole = () => {
                 <a-collapse-panel header="轨迹">
                     <Track v-if="mapOk"/>
                 </a-collapse-panel>
+                <a-collapse-panel header="流体">
+                    <Track v-if="mapOk"/>
+                </a-collapse-panel>
             </a-collapse>
         </div>
-        <div class="map" ref="mapRef">
-            <Meature v-if="mapOk" :map="mapObj.map" ref="measureRef" />
-        </div>
-    </div>
-
+    </MoveModel>
 </template>
 
-<style lang="less" scoped>
+<style lang="less">
 .map3d {
     width: 100%;
     height: 100%;
     display: flex;
-}
-.menu {
-    width: 20%;
-    max-width: 300px;
-    min-width: 200px;
-    box-shadow: inset 0 0 10px #ccc;
-    height: 100%;
-    overflow: auto;
-    background-color: #6f717845;
-    :deep(.ant-form-item) {
-        margin-bottom: 12px;
+    .map {
+        position: relative;
+        width: 80%;
+        height: 100%;
+        flex: 1 1 auto;
+        overflow: hidden;
     }
 }
-
-.map {
-    position: relative;
-    width: 80%;
-    height: 100%;
-    flex: 1 1 auto;
-    overflow: hidden;
+.map3d-menu {
+    margin: 0;
+    .map3d-menu-content {
+        max-height: 60vh;
+        overflow: auto;
+    }
 }
 </style>
