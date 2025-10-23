@@ -16,7 +16,7 @@ onBeforeUnmount(() => {
 
 const proxy = getCurrentInstance().proxy
 
-const token = '837eaaf3b54a3ce33c70a084d752fb7d'
+const token = ref('')
 const roadUrl = 'https://restapi.amap.com/v3/direction/driving'
 const poiUrl = 'https://restapi.amap.com/v5/place/polygon'
 
@@ -25,7 +25,7 @@ const getPoiLocation = async (val) => {
         url: poiUrl,
         method: 'GET',
         params: {
-            key: token,
+            key: token.value,
             polygon: '114.55980216317404, 37.706039671381404|122.91056889533985, 34.641522613434546',
             keywords: val,
             page_size: 1,
@@ -44,7 +44,7 @@ const getRoadLocation = async ({ start, end, wayPoints }) => {
         url: roadUrl,
         method: 'GET',
         params: {
-            key: token,
+            key: token.value,
             origin: `${start.longitude},${start.latitude}`,
             destination: `${end.longitude},${end.latitude}`,
             waypoints: wayPoints.map(item => `${item.longitude},${item.latitude}`).join(';'),
@@ -69,6 +69,10 @@ const activeKey = ref('1')
 // 文本内容
 const originText = ref('')
 const handlePaste = () => {
+    if (!token.value) {
+        message.error('请先输入token')
+        return
+    }
     const arr = originText.value.trim().split('\n')
     poiList.value = arr.map(item => {
         const data = item.split('\t')
@@ -322,6 +326,9 @@ const generateResult = () => {
     <a-tabs v-model:activeKey="activeKey" class="p-2">
         <a-tab-pane key="1" tab="粘贴excel内容">
             <a-form>
+                <a-form-item label="高德token">
+                    <a-input v-model:value="token" placeholder="请输入高德token"/>
+                </a-form-item>
                 <a-form-item label="原始内容">
                     <a-textarea v-model:value="originText" placeholder="请粘贴excel内容 不要手写" />
                 </a-form-item>

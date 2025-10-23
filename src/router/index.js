@@ -70,6 +70,12 @@ const router = createRouter({
             meta: { title: '建波的路' },
             component: () => import('@/views/jianboRoad/index.vue'),
         },
+        {
+            path: '/clickhouse',
+            name: 'clickhouse',
+            meta: { title: '更新clickhouse数据' },
+            component: () => import('@/views/clickhouse/index.vue'),
+        },
     ],
 })
 

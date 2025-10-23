@@ -29,6 +29,6 @@ onMounted(() => {
 
 <style lang="less">
 .building {
-    height: 100%;    
+    height: 100%;
 }
 </style>

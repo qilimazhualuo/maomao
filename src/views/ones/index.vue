@@ -23,6 +23,7 @@ const getData = (val) => {
     const data = {
         config: {
             type: 'member_assess_manhour_desc',
+            type: 'member_record_hours_desc',
             dimensions: [
                 {
                     field: 'root',
@@ -186,7 +187,7 @@ const columns = [
                 <a-button type="primary" html-type="submit">获取数据</a-button>
             </a-form-item>
         </a-form>
-        <a-table :columns="columns" :data-source="dataSource" />
+        <a-table :columns="columns" :data-source="dataSource" :pagination="false"/>
     </div>
 </template>
 
