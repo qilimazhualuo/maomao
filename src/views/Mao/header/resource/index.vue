@@ -71,37 +71,58 @@ const goldColor = computed(() => {
 </script>
 
 <template>
-    <a-button size="small" type="dashed" @click.stop="open = true">{{ $t('mao.warehouse') }}</a-button>
-    <a-modal v-model:open="open" title="仓库资源" width="80vw" :footer="false" centered
-        :bodyStyle="{ height: '70vh', overflow: 'auto' }">
+    <a-button size="small" type="dashed" @click.stop="open = true">{{
+        $t('mao.warehouse')
+    }}</a-button>
+    <a-modal
+        v-model:open="open"
+        title="仓库资源"
+        width="80vw"
+        :footer="false"
+        centered
+        :bodyStyle="{ height: '70vh', overflow: 'auto' }"
+    >
         <a-row class="h-100">
             <a-col :span="12" class="left h-100 overflow">
                 <a-row :gutter="[0, 8]">
-                    <room v-model:open="open"/>
-                    <cropland v-model:open="open"/>
-                    <forest v-model:open="open"/>
-                    <sawmill v-model:open="open"/>
-                    <mine v-model:open="open"/>
-                    <alchemy v-model:open="open"/>
-                    <market v-model:open="open"/>
+                    <room v-model:open="open" />
+                    <cropland v-model:open="open" />
+                    <forest v-model:open="open" />
+                    <sawmill v-model:open="open" />
+                    <mine v-model:open="open" />
+                    <alchemy v-model:open="open" />
+                    <market v-model:open="open" />
                 </a-row>
             </a-col>
             <a-col :span="12" class="right h-100 overflow ps-2">
                 <a-row>
                     <!-- 资源 -->
-                    <a-descriptions bordered :title="$t('mao.resource')" :column="2" layout="vertical" size="small">
+                    <a-descriptions
+                        bordered
+                        :title="$t('mao.resource')"
+                        :column="2"
+                        layout="vertical"
+                        size="small"
+                    >
                         <a-descriptions-item :label="$t('mao.food')">
-                            <a-tag :color="foodColor">{{ `${resource.food} / ${resource.warehouseStore.food}` }}</a-tag>
+                            <a-tag :color="foodColor">{{
+                                `${resource.food} / ${resource.warehouseStore.food}`
+                            }}</a-tag>
                         </a-descriptions-item>
                         <a-descriptions-item :label="$t('mao.wood')">
-                            <a-tag :color="woodColor">{{ `${resource.wood} / ${resource.warehouseStore.wood}` }}</a-tag>
+                            <a-tag :color="woodColor">{{
+                                `${resource.wood} / ${resource.warehouseStore.wood}`
+                            }}</a-tag>
                         </a-descriptions-item>
                         <a-descriptions-item :label="$t('mao.stone')">
-                            <a-tag :color="stoneColor">{{ `${resource.stone} / ${resource.warehouseStore.stone}`
-                                }}</a-tag>
+                            <a-tag :color="stoneColor">{{
+                                `${resource.stone} / ${resource.warehouseStore.stone}`
+                            }}</a-tag>
                         </a-descriptions-item>
                         <a-descriptions-item :label="$t('mao.gold')">
-                            <a-tag :color="goldColor">{{ `${resource.gold} / ${resource.warehouseStore.gold}` }}</a-tag>
+                            <a-tag :color="goldColor">{{
+                                `${resource.gold} / ${resource.warehouseStore.gold}`
+                            }}</a-tag>
                         </a-descriptions-item>
                     </a-descriptions>
                     <!-- 人口 -->

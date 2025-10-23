@@ -1,11 +1,11 @@
 <script setup>
-import { computed, getCurrentInstance } from 'vue'
+import { computed, getCurrentInstance, inject } from 'vue'
 import { PlusSquareOutlined } from '@ant-design/icons-vue'
 import { useResourceStore } from '@/stores/resource'
 import { config } from '@/config/mao_config'
 
 defineProps({
-    open: Boolean
+    open: Boolean,
 })
 const emit = defineEmits(['update:open'])
 
@@ -19,8 +19,13 @@ const canBuild = computed(() => {
         return resource[key] >= value[key]
     })
 })
+
+const maomao = inject('maomao')
 const add = () => {
     resource.product('cropland')
+    maomao.addModel('cropland').then(() => {
+        emit('update:open', true)
+    })
 }
 
 const tooltip = computed(() => {
@@ -49,8 +54,9 @@ const tooltip = computed(() => {
     </a-col>
     <a-col :span="24">
         <a-space wrap>
-            <a-button v-for="(item, idx) in resource.cropland" :key="item.id">{{ `${$t('mao.cropland')}${idx}`
-                }}</a-button>
+            <a-button v-for="(item, idx) in resource.cropland" :key="item.id">{{
+                `${$t('mao.cropland')}${idx}`
+            }}</a-button>
         </a-space>
     </a-col>
 </template>

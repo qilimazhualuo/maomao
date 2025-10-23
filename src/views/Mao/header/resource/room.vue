@@ -5,7 +5,7 @@ import { useResourceStore } from '@/stores/resource'
 import { config } from '@/config/mao_config'
 
 defineProps({
-    open: Boolean
+    open: Boolean,
 })
 const emit = defineEmits(['update:open'])
 
@@ -24,7 +24,7 @@ const maomao = inject('maomao')
 const add = () => {
     resource.product('room')
     emit('update:open', false)
-    maomao.addModel().then(() => {
+    maomao.addModel('room').then(() => {
         emit('update:open', true)
     })
 }
@@ -55,7 +55,9 @@ const tooltip = computed(() => {
     </a-col>
     <a-col :span="24">
         <a-space wrap>
-            <a-button v-for="(item, idx) in resource.room" :key="item.id">{{ `${$t('mao.room')}${idx}` }}</a-button>
+            <a-button v-for="(item, idx) in resource.room" :key="item.id">{{
+                `${$t('mao.room')}${idx}`
+            }}</a-button>
         </a-space>
     </a-col>
 </template>

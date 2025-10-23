@@ -41,7 +41,7 @@ const happyColor = computed(() => {
             <a-button size="small" type="dashed">{{ $t('mao.priority') }}</a-button>
             <Tech />
             <Resource />
-            <a-button size="small" type="dashed">{{ $t('com.save') }}</a-button>
+            <a-button size="small" type="dashed">{{ $t('mao.save') }}</a-button>
         </a-space>
     </div>
 </template>
@@ -51,6 +51,7 @@ const happyColor = computed(() => {
     display: flex;
     justify-content: space-between;
     padding: 8px;
+    background-color: rgba(255, 255, 255, 0.5);
 
     .status {
         width: 2px;
@@ -58,6 +59,7 @@ const happyColor = computed(() => {
 
         .ant-menu {
             border-bottom: none;
+            background-color: transparent;
 
             :deep(.ant-menu-submenu-title) {
                 padding-left: 0.2rem;

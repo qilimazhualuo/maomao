@@ -14,7 +14,7 @@ const router = createRouter({
             path: '/mao',
             name: 'mao',
             meta: { title: '猫猫游戏' },
-            component: () => import('@/views/Mao/index.vue'),
+            component: () => import('@/views/mao/index.vue'),
         },
         {
             path: '/coors',
@@ -71,10 +71,10 @@ const router = createRouter({
             component: () => import('@/views/jianboRoad/index.vue'),
         },
         {
-            path: '/clickhouse',
-            name: 'clickhouse',
-            meta: { title: '更新clickhouse数据' },
-            component: () => import('@/views/clickhouse/index.vue'),
+            path: '/remotePort',
+            name: 'remotePort',
+            meta: { title: '端口转发' },
+            component: () => import('@/views/remotePort/index.vue'),
         },
     ],
 })

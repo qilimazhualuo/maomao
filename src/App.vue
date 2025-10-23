@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 import Menu from '@/components/menu.vue'
 import 'dayjs/locale/zh-cn'
 dayjs.locale('zh-cn')
-
 </script>
 
 <template>

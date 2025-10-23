@@ -28,7 +28,6 @@ onMounted(() => {
 onUnmounted(() => {
     document.removeEventListener('keydown', showModal)
 })
-
 </script>
 
 <template>

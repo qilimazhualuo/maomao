@@ -1,18 +1,17 @@
-import config from "semistandard";
-console.log(config);
+import config from 'semistandard'
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
     ...[].concat(config),
     {
-        files: ["**/*.vue", "**/*.js", "**/*.jsx"], // 指定需要使用该配置的文件类型
+        files: ['**/*.vue', '**/*.js', '**/*.jsx'], // 指定需要使用该配置的文件类型
         languageOptions: {
             parserOptions: {
                 ecmaFeatures: {
                     ecmaVersion: 'latest',
                     sourceType: 'module',
                     requireConfigFile: false,
-                    jsx: true // 关键配置：启用 JSX 语法
+                    jsx: true, // 关键配置：启用 JSX 语法
                 },
             },
         },
@@ -75,5 +74,5 @@ export default [
             'react/react-in-jsx-scope': 'off',
             'vue/jsx-uses-vars': 'error', // 检查JSX中的变量是否被使用
         },
-    }
-];
+    },
+]

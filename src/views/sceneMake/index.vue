@@ -1,11 +1,7 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
-    <div>scene</div>
+    <div>todo</div>
 </template>
 
-<style lang="less">
-
-</style>
+<style lang="less"></style>

@@ -1,11 +1,11 @@
 <script setup>
-import { computed, getCurrentInstance } from 'vue'
+import { computed, getCurrentInstance, inject } from 'vue'
 import { PlusSquareOutlined } from '@ant-design/icons-vue'
 import { useResourceStore } from '@/stores/resource'
 import { config } from '@/config/mao_config'
 
 defineProps({
-    open: Boolean
+    open: Boolean,
 })
 const emit = defineEmits(['update:open'])
 
@@ -19,8 +19,13 @@ const canBuild = computed(() => {
         return resource[key] >= value[key]
     })
 })
+
+const maomao = inject('maomao')
 const add = () => {
     resource.product('warehouse')
+    maomao.addModel('warehouse').then(() => {
+        emit('update:open', true)
+    })
 }
 
 const options = [
@@ -57,8 +62,12 @@ const tooltip = computed(() => {
     </a-col>
     <a-col :span="24">
         <a-space wrap>
-            <a-segmented v-for="(item, idx) in resource.warehouses" :key="item.id" v-model:value="item.storeType"
-                :options="options" />
+            <a-segmented
+                v-for="(item, idx) in resource.warehouses"
+                :key="item.id"
+                v-model:value="item.storeType"
+                :options="options"
+            />
         </a-space>
     </a-col>
 </template>
