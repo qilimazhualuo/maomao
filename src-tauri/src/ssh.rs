@@ -29,21 +29,28 @@ pub enum SshError {
 }
 
 #[derive(Debug, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
 pub struct SshTunnelConfig {
+    #[serde(rename = "sshHost")]
     pub ssh_host: String,
+    #[serde(rename = "sshPort")]
     pub ssh_port: u16,
+    #[serde(rename = "sshUser")]
     pub ssh_user: String,
+    #[serde(rename = "sshPassword")]
     pub ssh_password: String,
+    #[serde(rename = "localPort")]
     pub local_port: u16,
+    #[serde(rename = "remoteHost")]
     pub remote_host: String,
+    #[serde(rename = "remotePort")]
     pub remote_port: u16,
 }
 
 #[derive(Debug, Serialize)]
-#[serde(rename_all = "camelCase")]
 pub struct SshTunnelStatus {
+    #[serde(rename = "localAddress")]
     pub local_address: String,
+    #[serde(rename = "remoteAddress")]
     pub remote_address: String,
     pub status: String,
 }
@@ -56,8 +63,16 @@ static ACTIVE_TUNNELS: Lazy<Arc<Mutex<HashMap<TunnelId, TunnelHandle>>>> =
     Lazy::new(|| Arc::new(Mutex::new(HashMap::new())));
 
 #[tauri::command]
-pub async fn start_ssh_tunnel(config: SshTunnelConfig) -> Result<SshTunnelStatus, SshError> {
-    let tunnel_id = format!("{}-{}", config.local_port, config.remote_host);
+pub async fn start_ssh_tunnel(
+    ssh_host: String,
+    ssh_port: u16,
+    ssh_user: String,
+    ssh_password: String,
+    local_port: u16,
+    remote_host: String,
+    remote_port: u16,
+) -> Result<SshTunnelStatus, SshError> {
+    let tunnel_id = format!("{}-{}", local_port, remote_host);
 
     // 检查是否已经存在相同的隧道
     {
@@ -68,23 +83,36 @@ pub async fn start_ssh_tunnel(config: SshTunnelConfig) -> Result<SshTunnelStatus
     }
 
     // 启动本地端口监听
-    let local_addr = format!("127.0.0.1:{}", config.local_port);
+    let local_addr = format!("127.0.0.1:{}", local_port);
     let listener = TcpListener::bind(&local_addr)
         .await
         .map_err(|e| SshError::BindError(format!("绑定端口失败: {}", e)))?;
 
-    let remote_addr = format!("{}:{}", config.remote_host, config.remote_port);
+    let remote_addr = format!("{}:{}", remote_host, remote_port);
 
     // 在后台任务中处理连接
     let tunnel_handle = tokio::spawn(async move {
         loop {
             match listener.accept().await {
                 Ok((local_stream, _)) => {
-                    let ssh_config = config.clone();
+                    let ssh_host = ssh_host.clone();
+                    let ssh_port = ssh_port;
+                    let ssh_user = ssh_user.clone();
+                    let ssh_password = ssh_password.clone();
+                    let remote_host = remote_host.clone();
+                    let remote_port = remote_port;
 
                     // 使用阻塞任务处理 SSH 连接
                     tokio::task::spawn_blocking(move || {
-                        if let Err(e) = handle_connection_blocking(ssh_config, local_stream) {
+                        if let Err(e) = handle_connection_blocking(
+                            ssh_host,
+                            ssh_port,
+                            ssh_user,
+                            ssh_password,
+                            remote_host,
+                            remote_port,
+                            local_stream,
+                        ) {
                             eprintln!("连接处理失败: {}", e);
                         }
                     });
@@ -111,11 +139,16 @@ pub async fn start_ssh_tunnel(config: SshTunnelConfig) -> Result<SshTunnelStatus
 }
 
 fn handle_connection_blocking(
-    config: SshTunnelConfig,
+    ssh_host: String,
+    ssh_port: u16,
+    ssh_user: String,
+    ssh_password: String,
+    remote_host: String,
+    remote_port: u16,
     local_stream: TcpStream,
 ) -> Result<(), SshError> {
     // 建立 SSH 连接
-    let ssh_addr = format!("{}:{}", config.ssh_host, config.ssh_port);
+    let ssh_addr = format!("{}:{}", ssh_host, ssh_port);
     let tcp = StdTcpStream::connect(&ssh_addr)
         .map_err(|e| SshError::ConnectionError(format!("SSH连接失败: {}", e)))?;
 
@@ -126,13 +159,20 @@ fn handle_connection_blocking(
     sess.handshake()
         .map_err(|e| SshError::ConnectionError(format!("SSH握手失败: {}", e)))?;
 
-    sess.userauth_password(&config.ssh_user, &config.ssh_password)
+    sess.userauth_password(&ssh_user, &ssh_password)
         .map_err(|e| SshError::AuthError(format!("SSH认证失败: {}", e)))?;
 
     // 创建 SSH 通道
     let mut channel = sess
-        .channel_direct_tcpip(&config.remote_host, config.remote_port, None)
-        .map_err(|e| SshError::ChannelError(format!("创建SSH通道失败: {}", e)))?;
+        .channel_direct_tcpip(&remote_host, remote_port, None)
+        .map_err(|e| {
+            let error_msg = format!("创建SSH通道失败: {}", e);
+            if error_msg.contains("administratively prohibited") {
+                SshError::ChannelError(format!("SSH服务器禁止端口转发。请检查服务器配置：\n1. 确保 AllowTcpForwarding yes\n2. 确保用户有端口转发权限\n3. 联系服务器管理员启用端口转发功能"))
+            } else {
+                SshError::ChannelError(error_msg)
+            }
+        })?;
 
     // 将 tokio TcpStream 转换为标准库的 TcpStream
     let mut local_stream = local_stream

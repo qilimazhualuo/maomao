@@ -39,7 +39,15 @@ const testConnection = async () => {
 const startTunnel = async () => {
     try {
         tunnelStatus.value = '启动中...'
-        const result = await invoke('start_ssh_tunnel', sshConfig.value)
+        const result = await invoke('start_ssh_tunnel', {
+            sshHost: sshConfig.value.sshHost,
+            sshPort: sshConfig.value.sshPort,
+            sshUser: sshConfig.value.sshUser,
+            sshPassword: sshConfig.value.sshPassword,
+            localPort: sshConfig.value.localPort,
+            remoteHost: sshConfig.value.remoteHost,
+            remotePort: sshConfig.value.remotePort
+        })
         tunnelStatus.value = `隧道已启动: ${result.localAddress} -> ${result.remoteAddress}`
         isConnected.value = true
         await listTunnels()
