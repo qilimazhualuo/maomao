@@ -1,14 +1,12 @@
 use once_cell::sync::Lazy;
-use serde::{Deserialize, Serialize};
-use ssh2::Session;
+use serde::Serialize;
+// use ssh_rs;
 use std::collections::HashMap;
-use std::io::{Read, Write};
-use std::net::TcpStream as StdTcpStream;
 use std::sync::Arc;
 use thiserror::Error;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::Mutex;
-use tokio::task;
 
 #[derive(Debug, Error, Serialize)]
 pub enum SshError {
@@ -28,22 +26,16 @@ pub enum SshError {
     ForwardError(String),
 }
 
-#[derive(Debug, Deserialize, Clone)]
-pub struct SshTunnelConfig {
-    #[serde(rename = "sshHost")]
-    pub ssh_host: String,
-    #[serde(rename = "sshPort")]
-    pub ssh_port: u16,
-    #[serde(rename = "sshUser")]
-    pub ssh_user: String,
-    #[serde(rename = "sshPassword")]
-    pub ssh_password: String,
-    #[serde(rename = "localPort")]
-    pub local_port: u16,
-    #[serde(rename = "remoteHost")]
-    pub remote_host: String,
-    #[serde(rename = "remotePort")]
-    pub remote_port: u16,
+impl SshError {
+    pub fn to_user_message(&self) -> String {
+        match self {
+            SshError::ConnectionError(msg) => format!("SSH连接失败: {}", msg),
+            SshError::AuthError(msg) => format!("SSH认证失败: {}", msg),
+            SshError::BindError(msg) => msg.clone(),
+            SshError::ChannelError(msg) => format!("通道创建失败: {}", msg),
+            SshError::ForwardError(msg) => format!("数据转发失败: {}", msg),
+        }
+    }
 }
 
 #[derive(Debug, Serialize)]
@@ -102,9 +94,9 @@ pub async fn start_ssh_tunnel(
                     let remote_host = remote_host.clone();
                     let remote_port = remote_port;
 
-                    // 使用阻塞任务处理 SSH 连接
-                    tokio::task::spawn_blocking(move || {
-                        if let Err(e) = handle_connection_blocking(
+                    // 使用 russh 处理连接
+                    tokio::spawn(async move {
+                        if let Err(e) = handle_connection_russh(
                             ssh_host,
                             ssh_port,
                             ssh_user,
@@ -112,7 +104,9 @@ pub async fn start_ssh_tunnel(
                             remote_host,
                             remote_port,
                             local_stream,
-                        ) {
+                        )
+                        .await
+                        {
                             eprintln!("连接处理失败: {}", e);
                         }
                     });
@@ -138,7 +132,7 @@ pub async fn start_ssh_tunnel(
     })
 }
 
-fn handle_connection_blocking(
+async fn handle_connection_russh(
     ssh_host: String,
     ssh_port: u16,
     ssh_user: String,
@@ -147,70 +141,48 @@ fn handle_connection_blocking(
     remote_port: u16,
     local_stream: TcpStream,
 ) -> Result<(), SshError> {
-    // 建立 SSH 连接
-    let ssh_addr = format!("{}:{}", ssh_host, ssh_port);
-    let tcp = StdTcpStream::connect(&ssh_addr)
-        .map_err(|e| SshError::ConnectionError(format!("SSH连接失败: {}", e)))?;
+    eprintln!("开始处理 SSH 连接...");
 
-    let mut sess =
-        Session::new().map_err(|e| SshError::ConnectionError(format!("创建SSH会话失败: {}", e)))?;
+    // 使用 sshpass 提供密码执行 SSH 命令
+    let mut child = tokio::process::Command::new("sshpass")
+        .args(&[
+            "-p",
+            &ssh_password,
+            "ssh",
+            "-L",
+            &format!(
+                "{}:{}:{}",
+                local_stream.local_addr().unwrap().port(),
+                remote_host,
+                remote_port
+            ),
+            "-p",
+            &ssh_port.to_string(),
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-o",
+            "UserKnownHostsFile=/dev/null",
+            "-o",
+            "LogLevel=ERROR", // 减少日志输出
+            "-N",             // 不执行远程命令，只做端口转发
+            &format!("{}@{}", ssh_user, ssh_host),
+        ])
+        .spawn()
+        .map_err(|e| SshError::ConnectionError(format!("启动SSH命令失败: {}", e)))?;
 
-    sess.set_tcp_stream(tcp);
-    sess.handshake()
-        .map_err(|e| SshError::ConnectionError(format!("SSH握手失败: {}", e)))?;
+    eprintln!("SSH 端口转发已启动");
 
-    sess.userauth_password(&ssh_user, &ssh_password)
-        .map_err(|e| SshError::AuthError(format!("SSH认证失败: {}", e)))?;
+    // 等待 SSH 进程完成
+    let status = child
+        .wait()
+        .await
+        .map_err(|e| SshError::ConnectionError(format!("SSH进程执行失败: {}", e)))?;
 
-    // 创建 SSH 通道
-    let mut channel = sess
-        .channel_direct_tcpip(&remote_host, remote_port, None)
-        .map_err(|e| {
-            let error_msg = format!("创建SSH通道失败: {}", e);
-            if error_msg.contains("administratively prohibited") {
-                SshError::ChannelError(format!("SSH服务器禁止端口转发。请检查服务器配置：\n1. 确保 AllowTcpForwarding yes\n2. 确保用户有端口转发权限\n3. 联系服务器管理员启用端口转发功能"))
-            } else {
-                SshError::ChannelError(error_msg)
-            }
-        })?;
-
-    // 将 tokio TcpStream 转换为标准库的 TcpStream
-    let mut local_stream = local_stream
-        .into_std()
-        .map_err(|e| SshError::ForwardError(format!("转换流失败: {}", e)))?;
-
-    // 双向数据转发 - 使用简单的循环
-    let mut buffer = [0; 4096];
-    loop {
-        // 从本地读取数据并发送到远程
-        match local_stream.read(&mut buffer) {
-            Ok(0) => break, // 连接关闭
-            Ok(n) => {
-                if let Err(_) = channel.write(&buffer[..n]) {
-                    break;
-                }
-                if let Err(_) = channel.flush() {
-                    break;
-                }
-            }
-            Err(_) => break,
-        }
-
-        // 从远程读取数据并发送到本地
-        match channel.read(&mut buffer) {
-            Ok(0) => break, // 连接关闭
-            Ok(n) => {
-                if let Err(_) = local_stream.write(&buffer[..n]) {
-                    break;
-                }
-                if let Err(_) = local_stream.flush() {
-                    break;
-                }
-            }
-            Err(_) => break,
-        }
+    if !status.success() {
+        return Err(SshError::ConnectionError("SSH端口转发失败".to_string()));
     }
 
+    eprintln!("SSH 端口转发完成");
     Ok(())
 }
 
@@ -239,28 +211,36 @@ pub async fn test_ssh_connection(
     ssh_user: String,
     ssh_password: String,
 ) -> Result<String, SshError> {
-    let result = task::spawn_blocking(move || -> Result<(), SshError> {
-        let ssh_addr = format!("{}:{}", ssh_host, ssh_port);
-        let tcp = StdTcpStream::connect(&ssh_addr)
-            .map_err(|e| SshError::ConnectionError(format!("SSH连接失败: {}", e)))?;
+    // 使用 sshpass 进行连接测试
+    let output = tokio::process::Command::new("sshpass")
+        .args(&[
+            "-p",
+            &ssh_password,
+            "ssh",
+            "-p",
+            &ssh_port.to_string(),
+            "-o",
+            "ConnectTimeout=10",
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-o",
+            "UserKnownHostsFile=/dev/null",
+            "-o",
+            "LogLevel=ERROR",
+            &format!("{}@{}", ssh_user, ssh_host),
+            "echo 'SSH连接测试成功'",
+        ])
+        .output()
+        .await
+        .map_err(|e| SshError::ConnectionError(format!("SSH命令执行失败: {}", e)))?;
 
-        let mut sess = Session::new()
-            .map_err(|e| SshError::ConnectionError(format!("创建SSH会话失败: {}", e)))?;
-
-        sess.set_tcp_stream(tcp);
-        sess.handshake()
-            .map_err(|e| SshError::ConnectionError(format!("SSH握手失败: {}", e)))?;
-
-        sess.userauth_password(&ssh_user, &ssh_password)
-            .map_err(|e| SshError::AuthError(format!("SSH认证失败: {}", e)))?;
-
-        Ok(())
-    })
-    .await
-    .map_err(|e| SshError::ConnectionError(format!("任务执行失败: {}", e)))?;
-
-    // 检查 SSH 连接结果
-    result?;
-
-    Ok("SSH连接测试成功".to_string())
+    if output.status.success() {
+        Ok("SSH连接测试成功".to_string())
+    } else {
+        let error_msg = String::from_utf8_lossy(&output.stderr);
+        Err(SshError::ConnectionError(format!(
+            "SSH连接测试失败: {}",
+            error_msg
+        )))
+    }
 }
