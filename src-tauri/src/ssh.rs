@@ -143,19 +143,17 @@ async fn handle_connection_russh(
 ) -> Result<(), SshError> {
     eprintln!("开始处理 SSH 连接...");
 
-    // 使用 sshpass 提供密码执行 SSH 命令
-    let mut child = tokio::process::Command::new("sshpass")
+    // 获取本地端口
+    let local_port = local_stream
+        .local_addr()
+        .map_err(|e| SshError::ConnectionError(format!("获取本地地址失败: {}", e)))?
+        .port();
+
+    // 使用系统 SSH 客户端进行端口转发
+    let mut child = tokio::process::Command::new("ssh")
         .args(&[
-            "-p",
-            &ssh_password,
-            "ssh",
             "-L",
-            &format!(
-                "{}:{}:{}",
-                local_stream.local_addr().unwrap().port(),
-                remote_host,
-                remote_port
-            ),
+            &format!("{}:{}:{}", local_port, remote_host, remote_port),
             "-p",
             &ssh_port.to_string(),
             "-o",
@@ -163,14 +161,19 @@ async fn handle_connection_russh(
             "-o",
             "UserKnownHostsFile=/dev/null",
             "-o",
-            "LogLevel=ERROR", // 减少日志输出
-            "-N",             // 不执行远程命令，只做端口转发
+            "LogLevel=ERROR",
+            "-o",
+            "PasswordAuthentication=yes",
+            "-N", // 不执行远程命令，只做端口转发
             &format!("{}@{}", ssh_user, ssh_host),
         ])
         .spawn()
         .map_err(|e| SshError::ConnectionError(format!("启动SSH命令失败: {}", e)))?;
 
-    eprintln!("SSH 端口转发已启动");
+    eprintln!(
+        "SSH 端口转发已启动: {} -> {}:{}",
+        local_port, remote_host, remote_port
+    );
 
     // 等待 SSH 进程完成
     let status = child
@@ -211,12 +214,9 @@ pub async fn test_ssh_connection(
     ssh_user: String,
     ssh_password: String,
 ) -> Result<String, SshError> {
-    // 使用 sshpass 进行连接测试
-    let output = tokio::process::Command::new("sshpass")
+    // 使用系统 SSH 客户端进行连接测试
+    let output = tokio::process::Command::new("ssh")
         .args(&[
-            "-p",
-            &ssh_password,
-            "ssh",
             "-p",
             &ssh_port.to_string(),
             "-o",
@@ -227,6 +227,8 @@ pub async fn test_ssh_connection(
             "UserKnownHostsFile=/dev/null",
             "-o",
             "LogLevel=ERROR",
+            "-o",
+            "PasswordAuthentication=yes",
             &format!("{}@{}", ssh_user, ssh_host),
             "echo 'SSH连接测试成功'",
         ])
