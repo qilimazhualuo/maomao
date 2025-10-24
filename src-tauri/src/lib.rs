@@ -15,10 +15,10 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             greet,
             service::http_request,
-            ssh::start_ssh_tunnel,
-            ssh::stop_ssh_tunnel,
-            ssh::list_ssh_tunnels,
-            ssh::test_ssh_connection
+            ssh::test_ssh_connection,
+            // ssh::start_ssh_tunnel,
+            // ssh::stop_ssh_tunnel,
+            // ssh::list_ssh_tunnels,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

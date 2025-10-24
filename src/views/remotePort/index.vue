@@ -39,10 +39,12 @@ const testConnection = async () => {
         loading.test = true
         testResult.value = '测试中...'
         const res = await invoke('test_ssh_connection', {
-            sshHost: sshConfig.sshHost,
-            sshPort: sshConfig.sshPort,
-            sshUser: sshConfig.sshUser,
-            sshPassword: sshConfig.sshPassword,
+            params: {
+                sshHost: sshConfig.sshHost,
+                sshPort: sshConfig.sshPort,
+                sshUser: sshConfig.sshUser,
+                sshPassword: sshConfig.sshPassword,
+            }
         })
         testResult.value = res
         message.success('SSH 连接测试成功')

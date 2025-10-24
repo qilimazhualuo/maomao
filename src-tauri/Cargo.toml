@@ -28,9 +28,7 @@ once_cell = "1.19.0"
 serde_qs = "0.11"
 base64 = { version = "0.21", features = ["alloc"] }
 tokio = { version = "1.0", features = ["full"] }
-# 移除 SSH 库依赖，使用系统 SSH 客户端
-# thrussh = "0.40.4"
-# tokio-util = "0.7"
+ssh2 = "0.9.5"
 
 [package.metadata.bundle.windows]
 wix = { path = "C:/Users/Administrator/.cache/tauri/wix314-binaries" }
