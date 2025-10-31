@@ -76,6 +76,12 @@ const router = createRouter({
             meta: { title: '端口转发' },
             component: () => import('@/views/remotePort/index.vue'),
         },
+        {
+            path: '/antvg6',
+            name: 'antvg6',
+            meta: { title: 'antvg6' },
+            component: () => import('@/views/antvg6/index.vue'),
+        },
     ],
 })
 
